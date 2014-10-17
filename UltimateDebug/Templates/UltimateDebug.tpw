@@ -1,0 +1,226 @@
+#GROUP(%InsertedStart)
+!-------------------
+!SystemIdle : Start
+!-------------------
+#!
+#GROUP(%InsertedEnd)
+!-----------------
+!SystemIdle : End
+!-----------------
+#!
+#GROUP(%TabInstructions) 
+#TAB('Instructions')
+  #DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Class Calls:' )
+  #DISPLAY('ud.debug(string)')
+  #DISPLAY('  Displays the contents of the string.')
+  #DISPLAY('   ex: ud.debug(<39>Show In Debug Window<39>)')
+  #DISPLAY('')
+  #DISPLAY('ud.debugqueue(queue,<String>')
+  #DISPLAY('  Displays contents of a Queue')
+  #DISPLAY('   ex: ud.debugqueue(myQ,<39>This is my Queue<39>)')
+  #DISPLAY('')
+  #DISPLAY('ud.debugevent(')
+  #DISPLAY('  Displays events as they happen.')  
+  #DISPLAY('   Place code in TakeEvent embed.')
+  #DISPLAY('   ex: ud.debugevent()')
+  #DISPLAY('OR Use EXTENSION events template.')
+  #DISPLAY('')
+  #DISPLAY('ud.cleardebugview()')
+  #DISPLAY('  Clears the Debug Window.')
+  #DISPLAY('')
+  #DISPLAY('See example apps for more information.')
+#ENDTAB
+#!
+#!
+#GROUP(%TabCopyright)
+#BOXED,SECTION,AT(0,23,240,42)
+  #DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('http://www.clarionlive.com'),AT(10,30)
+  #DISPLAY('')
+#ENDBOXED
+#!
+#!
+#GROUP(%TabContributors)
+#TAB('Contributors')
+  #DISPLAY
+  #DISPLAY('Arnold Young + John Hickey = Clarion Live')
+  #DISPLAY('http://www.clarionlive.com')
+  #DISPLAY
+  #DISPLAY('Andy Wilton - Noyantis Software')
+  #DISPLAY('http://www.noyantis.com')   
+  #DISPLAY
+  #DISPLAY('Mike Hanson - BoxSoft')
+  #DISPLAY('http://www.boxsoft.net')
+  #DISPLAY
+  #DISPLAY('Mark Goldberg')
+  #DISPLAY('Contributing DebugEvent')
+  #DISPLAY('Contributing Class Refactoring')
+  #DISPLAY
+  #DISPLAY('Roberto Artigas')
+  #DISPLAY('Contributing Global EMBED Marking')
+  #DISPLAY('Contributing Trace ALL Procedures')
+  #DISPLAY('Contributing TEMPLATE for Events')
+  #DISPLAY('Contributing Trace CLW Source Code')
+  #DISPLAY
+#ENDTAB
+#!
+#!
+#GROUP(%TabClarionVer)
+#TAB('Template Set')
+  #DISPLAY
+  #DISPLAY('Current Template Set being used by this app.')
+  #DISPLAY
+  #DISPLAY('This will be set automatically for you')
+  #DISPLAY('once a compile has been performed.')
+  #DISPLAY
+  #ENABLE(%False)
+    #PROMPT('Template Set:',@S10),%CLSkelFamily,Default(''),AT(90,,95,10)
+  #ENDENABLE
+  #DISPLAY
+#ENDTAB
+#!
+#!
+#GROUP(%TabTesting) 
+#TAB('Testing')
+  #DISPLAY('Tested 2014-04-14 with C9 and ABC templates.')
+  #DISPLAY('Tested 2014-04-15 with C9 and LEGACY templates.')
+  #DISPLAY('')
+  #DISPLAY('No other tests done.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#ENDTAB
+#!
+#!
+#GROUP(%TabPurpose) 
+#TAB('Purpose')
+  #DISPLAY('To track thru Clarion programs and discover code failures.')
+  #DISPLAY('To help in understanding the flow of other individuals code.')
+  #DISPLAY('To discover large systems purposes and how they are achieved.') 
+  #DISPLAY('')
+  #DISPLAY('And while the built in Clarion debbuger can help find individal')
+  #DISPLAY('code failures, it does nothing to help out when the big picture')
+  #DISPLAY('is involved where you have lots of new code to understand.')
+#ENDTAB
+#!
+#!
+#GROUP(%TabOOP)
+#TAB('OOP'),WHERE(%False)
+  #BOXED('Default prompts'),AT(0,0),WHERE(%False),HIDE
+  #INSERT(%OOPHiddenPrompts(ABC))
+  #ENDBOXED
+#ENDTAB
+#!
+#!
+#GROUP(%TabClassesABC, %CLSkelFamily)
+#TAB('&Classes'),WHERE(%CLSkelFamily='ABC')
+  #WITH(%ClassItem, 'Default')
+    #INSERT(%ClassPrompts(ABC))
+  #ENDWITH
+#ENDTAB
+#!
+#!
+#GROUP(%TabClassesLEGACY, %CLSkelFamily)
+#TAB('&Classes'),WHERE(%CLSkelFamily='LEGACY')
+  #BOXED('')
+    #PROMPT('Object:',@S40),%ObjectID,AT(65,,115,10)
+  #ENDBOXED
+#ENDTAB
+#!
+#!
+#GROUP(%WndInit)
+#INSERT(%InsertedStart)
+%CLSkelObj.Init()
+#INSERT(%InsertedEnd)
+#!
+#!
+#GROUP(%WndKill)
+#INSERT(%InsertedStart)
+%CLSkelObj.Kill()
+#INSERT(%InsertedEnd)
+#!
+#!
+#GROUP(%CalcFamily, * %CLSkelFamily)
+#IF(VarExists(%AppTemplateFamily))
+  #IF(%AppTemplateFamily='CLARION')
+    #SET(%CLSkelFamily,'LEGACY')
+  #ELSE
+    #SET(%CLSkelFamily,'ABC')
+  #ENDIF
+#ELSIF(VarExists(%cwtemplateversion))
+  #IF(%cwtemplateversion = 'v5.5')
+    #IF(VarExists(%ABCVersion))
+      #SET(%CLSkelFamily,'ABC')
+    #ELSE
+      #SET(%CLSkelFamily,'LEGACY')
+    #ENDIF
+  #ELSE
+    #IF(%cwtemplateversion = 'v2.003')
+      #SET(%CLSkelFamily,'LEGACY')
+    #ELSE
+      #SET(%CLSkelFamily,'ABC')
+    #ENDIF
+  #ENDIF
+#ENDIF
+#!
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2014.04.14 - Additional documentation for the options button
+#!---------------------------------------------------------------------
+#GROUP(%TabPurpose1) 
+#TAB('Purpose')
+  #DISPLAY('These options get you some application level debug information')
+  #DISPLAY('when the application first starts up.')
+  #DISPLAY('')
+  #DISPLAY('The information displayed is:'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Compilation and Library Information')
+  #DISPLAY('Active GLOBAL templates')
+  #DISPLAY('Dictionary GLOBAL variables')
+  #DISPLAY('')
+  #DISPLAY('Procedures are created in the main program adding all the needed')
+  #DISPLAY('tracing debug information. The dump calls those procedures when')
+  #DISPLAY('the application starts.')
+  #DISPLAY('')
+  #DISPLAY('The handy one is the dump of the Dictionary GLOBAL variables.')
+  #DISPLAY('Since Dictionary GLOBAL variables can be accessed from anywhere,')
+  #DISPLAY('poor coding practices can destroy them from anywhere.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabInstructions1) 
+#TAB('Instructions')
+  #DISPLAY('Create global information procedure?'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('If ON the generation step will create the procedure.')
+  #DISPLAY('')
+  #DISPLAY('Dump global information?'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('If ON it will display the information when application starts.')
+  #DISPLAY('')
+  #DISPLAY('Create global variables procedure?'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('If ON the generation step will create the procedure.')
+  #DISPLAY('')
+  #DISPLAY('Dump global variables?'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('If ON it will display the information when application starts.')
+  #!DISPLAY('')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabLimitations1) 
+#TAB('Limitations')
+  #DISPLAY('The GLOBAL variable dump procedure will NOT handle arrays.')
+  #DISPLAY('')
+  #DISPLAY('It is designed to dump single variables or single variables in a')
+  #DISPLAY('group or queue. Only a CLIP happens on the GLOBAL variable.')
+  #DISPLAY('')
+  #DISPLAY('So there is NO formating of any kind. If you need it, add it.')
+  #!DISPLAY('')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabTesting1) 
+#TAB('Testing')
+  #DISPLAY('Tested 2014-04-14 with C9 and ABC templates.')
+  #DISPLAY('Tested 2014-04-15 with C9 and LEGACY templates.')
+  #DISPLAY('')
+  #DISPLAY('No other tests done.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#ENDTAB
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------

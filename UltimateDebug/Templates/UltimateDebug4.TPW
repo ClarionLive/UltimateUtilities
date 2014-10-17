@@ -1,0 +1,259 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! File Name:   UltimateDebug4.TPW
+#! Purpose:     Template add-on's to do procedure tracing from John Hickey.
+#! Author:      Released under the Clarion Open Source License. (http://www.clarionmag.com/cmag/dospl.html)
+#! Changes:     Roberto Artigas
+#!  *   RA.2014.06.04   Begin moving from JH's version .99 to downloadable release
+#!  *   RA.2014.06.06   Completed move of JH's template to the downloadable release
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#EXTENSION(ProcedureInfoExtension,'RA.2014.06.06: Procedure Information Extension Template'),PROCEDURE
+#DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('')
+#DISPLAY('')
+#PROMPT('Disable template',CHECK),%DoNotShowDebugInfo,AT(10),DEFAULT(0)
+#DISPLAY('')
+#SHEET,AT(,,288),HSCROLL
+#!#TAB('General')
+#!#BOXED(' Markers for GLOBAL Embed Locations'),AT(,,280)
+#!  #ENABLE(~%CLSkelAppDisable)
+#!    #DISPLAY('')
+#!    #PROMPT('Generate Marker Code',CHECK),%TraceCode,DEFAULT(1),AT(10)
+#!    #DISPLAY('')
+#!  #ENDENABLE
+#!#ENDBOXED
+#!#ENDTAB
+#TAB('Proc Info')
+  #BOXED(''),AT(,,280)
+    #DISPLAY('')
+    #ENABLE(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)
+      #PROMPT ('Alert Key:',KEYCODE),%UDProcAlert,DEFAULT('CtrlShiftP'),AT(100,,180) 
+      #PROMPT ('Report Keystate:',@S200),%UDKeyState,DEFAULT('udKeyState:Shift'),AT(100,,180)
+      #DISPLAY('')
+      #DISPLAY('Available Keystates are:')
+      #DISPLAY('udKeyState:Shift')                         
+      #DISPLAY('udKeyState:Ctrl')                          
+      #DISPLAY('udKeyState:Alt') 
+      #DISPLAY('')
+      #DISPLAY('You can use combinations by adding them.')
+      #DISPLAY('Example:')
+      #DISPLAY('udKeyState:Shift + udKeyState:Ctrl')   
+      #DISPLAY('')
+      #DISPLAY('For continuous display of Procedure Info in your Debug View window')                       
+      #PROMPT (' Display Entry and Exit into procedure',CHECK),%UDEntryExit,AT(10),DEFAULT(0)
+    #ENDENABLE
+    #DISPLAY('')
+  #ENDBOXED                       
+#ENDTAB
+#INSERT(%TabPurpose4a)
+#INSERT(%TabTesting4a) 
+#ENDSHEET
+#!
+#!#BOXED  ('')
+#!#DISPLAY('Procedure Info  Extension Template')
+#!#DISPLAY('This Template generates code to display Procedure Information.')
+#!#PROMPT('Disable',CHECK),%DoNotShowDebugInfo
+#!#DISPLAY('')
+#!#ENDBOXED 
+#!---------------------------------------------------------------------
+#AT(%AfterWindowOpening),PRIORITY(0005)
+ #IF(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)
+  #IF (%Window <> '')
+! === %ProcedureTemplate ===
+%Window{Prop:Alrt,255} = %UDProcAlert
+! === %ProcedureTemplate ===   
+  #ENDIF
+ #ENDIF
+#ENDAT         
+#!---------------------------------------------------------------------
+#AT(%AcceptLoopBeforeEventHandling),PRIORITY(6320) 
+#IF(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)  
+ #IF(%CLSkelFamily = 'LEGACY')
+  #IF ((%ProcedureTemplate <> 'Report') AND (%ProcedureTemplate <> 'UnivProcess') AND (%ProcedureTemplate <> 'UnivReport') AND (%ProcedureTemplate <> 'UnivAbcReport') AND (%ProcedureTemplate <> 'QueueProcess') AND (%ProcedureTemplate <> 'ProcessQueue') AND (%ProcedureTemplate <> 'Process')AND (%ProcedureTemplate <> 'Source'))
+! === %ProcedureTemplate ===
+IF KEYCODE()=%UDProcAlert AND EVENT() = Event:PreAlertKey
+  CYCLE
+END
+IF KEYCODE()=%UDProcAlert  
+  #INSERT(%ShowTheProcedureInfo)
+  CYCLE
+END
+! === %ProcedureTemplate ===
+  #ENDIF
+ #ENDIF
+#ENDIF
+#ENDAT 
+#!---------------------------------------------------------------------
+#! RA.2014.06.06 - ABC support
+#!---------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'TakeEvent','(),BYTE'),PRIORITY(6320)
+#IF(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)
+ #IF(%CLSkelFamily = 'ABC')
+  #IF ((%ProcedureTemplate <> 'Report') AND (%ProcedureTemplate <> 'UnivProcess') AND (%ProcedureTemplate <> 'UnivReport') AND (%ProcedureTemplate <> 'UnivAbcReport') AND (%ProcedureTemplate <> 'QueueProcess') AND (%ProcedureTemplate <> 'ProcessQueue') AND (%ProcedureTemplate <> 'Process')AND (%ProcedureTemplate <> 'Source'))
+! === %ProcedureTemplate ===
+IF KEYCODE()=%UDProcAlert AND EVENT() = Event:PreAlertKey
+  CYCLE
+END
+IF KEYCODE()=%UDProcAlert  
+  #INSERT(%ShowTheProcedureInfo)
+  CYCLE
+END
+! === %ProcedureTemplate ===
+  #ENDIF
+ #ENDIF
+#ENDIF
+#ENDAT
+
+#!---------------------------------------------------------------------
+#! RA.2014.04.06 - Code in a different place
+#!#AT(%ProcedureSetup),PRIORITY(1)  
+#!#IF(%DoNotShowDebugInfo = 0)
+#!IF %CLSkelClass.ProcedureInfoToDebugView    
+#!  %CLSkelClass.Debug('Entering: ' & FORMAT('%Procedure',@S30) & FORMAT(%CLSkelClass.SetShortApplicationName('%Application','%ProgramExtension'),@S20) & ' Last Modified: ' & '%@D02@ProcedureDateChanged @ %@T03@ProcedureTimeChanged') 
+#!END
+#!#ENDIF
+#!#IF ((%ProcedureTemplate <> 'Report') AND (%ProcedureTemplate <> 'UnivProcess') AND (%ProcedureTemplate <> 'UnivReport') AND (%ProcedureTemplate <> 'UnivAbcReport') AND (%ProcedureTemplate <> 'QueueProcess') AND (%ProcedureTemplate <> 'ProcessQueue') AND (%ProcedureTemplate <> 'Process')AND (%ProcedureTemplate <> 'Source'))
+#!#ELSE    
+#!IF BAND(Keystate(),%UDKeyState) 
+#!  #INSERT(%ShowTheProcedureInfo)
+#!END
+#!#ENDIF
+#!#ENDAT
+#!---------------------------------------------------------------------
+#!#AT(%ProcessedCode),PRIORITY(0010) 
+#AT(%ProcedureInitialize),PRIORITY(0010)
+#IF(%CLSkelFamily = 'LEGACY')
+ #IF(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)
+! === %ProcedureTemplate ===
+  #IF(%UDEntryExit)
+%CLSkelClass.ProcedureInfoToDebugView = TRUE
+  #ENDIF
+IF %CLSkelClass.ProcedureInfoToDebugView    
+  %CLSkelClass.Debug('Entering: ' & FORMAT('%Procedure',@S30) & FORMAT(%CLSkelClass.SetShortApplicationName('%Application','%ProgramExtension'),@S20) & ' Last Modified: ' & '%@D02@ProcedureDateChanged @ %@T03@ProcedureTimeChanged') 
+END
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#! RA.2014.06.06 - ABC Support
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(0010)
+ #IF(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)
+! === %ProcedureTemplate ===
+  #IF(%UDEntryExit)
+%CLSkelClass.ProcedureInfoToDebugView = TRUE
+  #ENDIF
+IF %CLSkelClass.ProcedureInfoToDebugView    
+  %CLSkelClass.Debug('Entering: ' & FORMAT('%Procedure',@S30) & FORMAT(%CLSkelClass.SetShortApplicationName('%Application','%ProgramExtension'),@S20) & ' Last Modified: ' & '%@D02@ProcedureDateChanged @ %@T03@ProcedureTimeChanged') 
+END
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#!#AT(%ProcessedCode),PRIORITY(9990) 
+#AT(%EndOfProcedure),PRIORITY(9990)
+#IF(%CLSkelFamily = 'LEGACY')
+ #IF(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)
+! === %ProcedureTemplate ===
+IF %CLSkelClass.ProcedureInfoToDebugView    
+  %CLSkelClass.Debug('Leaving: ' & FORMAT('%Procedure',@S30) & FORMAT(%CLSkelClass.SetShortApplicationName('%Application','%ProgramExtension'),@S20) & ' Last Modified: ' & '%@D02@ProcedureDateChanged @ %@T03@ProcedureTimeChanged') 
+END
+! === %ProcedureTemplate ===
+ #ENDIF
+#!
+ #IF ((%ProcedureTemplate <> 'Report') AND (%ProcedureTemplate <> 'UnivProcess') AND (%ProcedureTemplate <> 'UnivReport') AND (%ProcedureTemplate <> 'UnivAbcReport') AND (%ProcedureTemplate <> 'QueueProcess') AND (%ProcedureTemplate <> 'ProcessQueue') AND (%ProcedureTemplate <> 'Process')AND (%ProcedureTemplate <> 'Source'))
+ #ELSE
+! === %ProcedureTemplate ===    
+IF BAND(Keystate(),%UDKeyState) 
+  #INSERT(%ShowTheProcedureInfo)
+END
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#! RA.2014.06.06 - ABC Support
+#AT(%WindowManagerMethodCodeSection,'Kill','(),BYTE'),PRIORITY(9990)
+ #IF(~%CLSkelAppDisable AND ~%DoNotShowDebugInfo)
+! === %ProcedureTemplate ===
+IF %CLSkelClass.ProcedureInfoToDebugView    
+  %CLSkelClass.Debug('Leaving: ' & FORMAT('%Procedure',@S30) & FORMAT(%CLSkelClass.SetShortApplicationName('%Application','%ProgramExtension'),@S20) & ' Last Modified: ' & '%@D02@ProcedureDateChanged @ %@T03@ProcedureTimeChanged') 
+END
+! === %ProcedureTemplate ===
+ #ENDIF
+#!
+ #IF ((%ProcedureTemplate <> 'Report') AND (%ProcedureTemplate <> 'UnivProcess') AND (%ProcedureTemplate <> 'UnivReport') AND (%ProcedureTemplate <> 'UnivAbcReport') AND (%ProcedureTemplate <> 'QueueProcess') AND (%ProcedureTemplate <> 'ProcessQueue') AND (%ProcedureTemplate <> 'Process')AND (%ProcedureTemplate <> 'Source'))
+ #ELSE
+! === %ProcedureTemplate ===    
+IF BAND(Keystate(),%UDKeyState) 
+  #INSERT(%ShowTheProcedureInfo)
+END
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#GROUP(%ShowTheProcedureInfo)   
+#IF (%Window <> '')
+%CLSkelClass.ShowProcedureInfo('%Procedure',%CLSkelClass.SetApplicationName('%Application','%ProgramExtension'),%Window{PROP:Hlp},'%@D02@ProcedureDateCreated @ %@T03@ProcedureTimeCreated','%@D02@ProcedureDateChanged @ %@T03@ProcedureTimeChanged','%(FORMAT(TODAY(),@D02)) @ %(FORMAT(CLOCK(),@T03))')  
+#ELSE
+%CLSkelClass.ShowProcedureInfo('%Procedure',%CLSkelClass.SetApplicationName('%Application','%ProgramExtension'),'None','%@D02@ProcedureDateCreated @ %@T03@ProcedureTimeCreated','%@D02@ProcedureDateChanged @ %@T03@ProcedureTimeChanged','%(FORMAT(TODAY(),@D02)) @ %(FORMAT(CLOCK(),@T03))')  
+#ENDIF
+#!---------------------------------------------------------------------
+#!#GROUP(%TabProcedureInfo) 
+#!#TAB('Proc Info')
+#!#PROMPT ('Activate Procedure Info',CHECK),%UDProcInfo,DEFAULT(1)
+#!#ENABLE(%UDProcInfo)
+#!#PROMPT ('Alert Key:',KEYCODE),%UDProcAlert,DEFAULT('CtrlShiftP') 
+#!#PROMPT ('Report Keystate:',@S200),%UDKeyState,DEFAULT('udKeyState:Shift')
+#!#DISPLAY('Available Keystates are:')
+#!#DISPLAY('udKeyState:Shift')                         
+#!#DISPLAY('udKeyState:Ctrl')                          
+#!#DISPLAY('udKeyState:Alt') 
+#!#DISPLAY('')
+#!#DISPLAY('You can use combinations by adding them.')
+#!#DISPLAY('Example:')
+#!#DISPLAY('udKeyState:Shift + udKeyState:Ctrl')   
+#!#DISPLAY('')
+#!#DISPLAY('For continuous display of Procedure Info in your')                       
+#!#DISPLAY('DebugView window set Property: ')
+#!#DISPLAY('    ProcedureInfoToDebugView = TRUE')                       
+#!#ENDENABLE  
+#!#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabPurpose4a)
+#TAB('Purpose')
+  #DISPLAY('This was in John Hickey''s Ultimate Debug template collection.')
+  #DISPLAY('It has now (2014.06.06) been moved to the dowloadable release.')
+  #DISPLAY('')
+  #DISPLAY('This template adds Entry and Exit points that can be displayed')
+  #DISPLAY('in the DebugView trace window at the <39>PROCEDURE<39> level.')
+  #DISPLAY('')
+  #DISPLAY('This also adds a pop-up window that will show you what PROCEDURE')
+  #DISPLAY('you are currently in when you press the HOTKEY defined.')
+  #DISPLAY('')
+  #DISPLAY('The information displayed by that window can be sent to the')
+  #DISPLAY('DebugView display window or be copied to the cliboard.')
+  #DISPLAY('')
+  #DISPLAY('Works for both ABC and LEGACY templates.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabTesting4a) 
+#TAB('Testing')
+  #DISPLAY('Tested 2014-06-06 with C9 and ABC templates.')
+  #DISPLAY('Tested 2014-06-06 with C9 and LEGACY templates.')
+  #DISPLAY('')
+  #DISPLAY('No other tests done.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #ENDTAB
+#!
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------

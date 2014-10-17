@@ -1,0 +1,493 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! File Name:   UltimateDebug3.TPW
+#! Purpose:     Template add-on's to do source code file debuging .
+#! Author:      Copyright © 1999-2014 by Roberto Artigas. All rights reserved world wide.
+#!              Released under the Clarion Open Source License. (http://www.clarionmag.com/cmag/dospl.html)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!
+#EXTENSION(DebugSourceFiles, 'RA.2014.04.12: Debug Source (*.CLW) Files'),APPLICATION,REQ(UltimateDebugGlobal)
+#!--------------------------------------------------------------------
+#! Created By:  Roberto Artigas
+#! Modifications:
+#! 2014.04.14   Roberto Artigas
+#!  *   Trap occurence of no source *.CLW files being selected
+#! 2014.04.12   Roberto Artigas
+#!  *   Creation of this template
+#!--------------------------------------------------------------------
+#! NOTES:
+#! This is uses the profile.clw as a source to debug everything that gets 
+#! entered and exited. This includes methods, routines, procedures, etc.
+#! This is a bit different than adding UltimateDebug entry and exit points
+#! since it tracks literally everything from the clarion perspective.
+#! This can be a bit overwhelming as when you enter a browse you can get
+#! over 100,000 entries and exits to procedures, methods, and routines.
+#! I used the task manager to kill this test, so no actual numbers exist.
+#! This behaviour makes it useless unless you limit what you are tracing.
+#!--------------------------------------------------------------------
+#! The profile.clw file has an "EnterProc" that constains the source file
+#! name of the file that is entering. That is how we limit what we look at.
+#! You give the template a list of source names (*.CLW) and it uses that.
+#!--------------------------------------------------------------------
+#! This template generates what you need for source files.
+#! However you will need to have some knowledge of this debug process.
+#!--------------------------------------------------------------------
+#!
+#DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('')
+#PROMPT('Generate Debug Source Files' , CHECK), %GenSourceFiles, DEFAULT(1), AT(10)
+#DISPLAY('IMPORTANT: Must have at least one source file to debug.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('')
+#!
+#SHEET,AT(,,288),HSCROLL
+#TAB('General')
+#BOXED(' Debug Source Files '),AT(,,280)
+  #ENABLE(~%CLSkelAppDisable)
+    #DISPLAY('')
+    #PROMPT('Location:', @S100), %SourceLocation, DEFAULT('C:\Clarion9\accessory\libsrc\win'), AT(54,,224)
+    #PREPARE
+      #SET(%SelFileCLW,(%SourceLocation & '\' & %SourceName & '.clw'))
+      #SET(%SelFilePRJ,(%SourceLocation & '\' & %SourceName & '.prj'))
+      #SET(%SelFileINC,('''' & %SourceName & '.prj'''))
+      #!SET(%SelFileINC,('''Include(' & %SourceName & '.prj),CopyToOutputDirectory=Never'''))
+      #SET(%FirstTime,%True)
+    #ENDPREPARE
+    #DISPLAY('HINT: No trailing backslash is necessary')
+    #DISPLAY('')
+    #ENABLE(%False)
+    #PROMPT('Name:', @S60), %SourceName, DEFAULT('profileRA'), AT(54,,224)
+    #ENDENABLE
+    #PREPARE
+      #SET(%SelFileCLW,(%SourceLocation & '\' & %SourceName & '.clw'))
+      #SET(%SelFilePRJ,(%SourceLocation & '\' & %SourceName & '.prj'))
+      #SET(%SelFileINC,('''' & %SourceName & '.prj'''))
+      #!SET(%SelFileINC,('''Include(' & %SourceName & '.prj),CopyToOutputDirectory=Never'''))
+      #SET(%FirstTime,%True)
+    #ENDPREPARE
+    #DISPLAY('HINT: No extension is necessary')
+    #DISPLAY('')
+    #BUTTON('Enter source files for Debugging'),PROP(PROP:FontColor,7B0012H),PROP(PROP:FontStyle,400),AT(,,268,20)
+    #DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+    #DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+    #DISPLAY('')
+    #DISPLAY('')
+    #DISPLAY('')
+    #SHEET,AT(,,288),HSCROLL 
+    #TAB('General')
+      #BOXED(' Debug Source Files List '),AT(,,280)
+        #!DISPLAY('')
+        #BUTTON('File Selection'),MULTI(%DoTheseFiles,%DoFile),AT(,,268),INLINE
+        #DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+        #DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+        #DISPLAY('')
+        #DISPLAY('')
+        #DISPLAY('')
+        #SHEET,AT(,,288),HSCROLL 
+        #TAB('General')
+        #BOXED(' Source File '),AT(,,280)
+	  #DISPLAY('')
+          #PROMPT('Ask for File:',OPENDIALOG('Pick File','Source|*.CLW')),%DoFile
+          #!VALIDATE((ITEMS(%DoTheseFiles) < 1),'You must have at least one source file to debug.')
+          #DISPLAY('')
+        #ENDBOXED	
+        #ENDTAB
+        #INSERT(%TabPurpose3b) 
+        #INSERT(%TabInstructions3b)
+        #ENDSHEET
+        #ENDBUTTON
+        #!DISPLAY('') 
+      #ENDBOXED
+    #ENDTAB
+    #INSERT(%TabPurpose3a) 
+    #INSERT(%TabInstructions3a)
+    #ENDSHEET
+    #ENDBUTTON
+    #!DISPLAY('IMPORTANT: Must have at least one source file to debug.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+    #DISPLAY('')
+  #ENDENABLE
+#ENDBOXED
+#BOXED(' Hidden Variables '),AT(,,280),HIDE
+  #ENABLE(%False)
+  #PROMPT('Source:', @S100), %SelFileCLW, DEFAULT((%SourceLocation & '\' & %SourceName & '.clw')), AT(54,,224)
+  #PROMPT('Project:', @S100), %SelFilePRJ, DEFAULT((%SourceLocation & '\' & %SourceName & '.prj')), AT(54,,224)
+  #PROMPT('Include:', @S100), %SelFileINC, DEFAULT('''' & %SourceName & '.prj'''), AT(54,,224)
+  #!PROMPT('Include:', @S100), %SelFileINC, DEFAULT('''Include(' & %SourceName & '.prj),CopyToOutputDirectory=Never'''), AT(54,,224)
+  #PROMPT('Start:', @N1), %FirstTime, DEFAULT(1), AT(54,,224)
+ #ENDENABLE
+#ENDBOXED
+#ENDTAB
+#INSERT(%TabPurpose3) 
+#INSERT(%TabInstructions3)
+#INSERT(%TabLimitations3)
+#INSERT(%TabTesting3)
+#INSERT(%TabRealityCheck3)
+#ENDSHEET
+#!
+#!#DISPLAY('Copyright © 1999-2014 by Roberto Artigas')
+#!
+#SET(%SelFileCLW,(%SourceLocation & '\' & %SourceName & '.clw'))
+#SET(%SelFilePRJ,(%SourceLocation & '\' & %SourceName & '.prj' ))
+#SET(%SelFileINC,('''include(' & %SourceName & '.prj)'''))
+#!SET(%SelFileINC,('''Include(' & %SourceName & '.prj),CopyToOutputDirectory=Never'''))
+#SET(%FirstTime,%True)
+#!
+#!---------------------------------------------------------------------
+#AT(%ProgramSetup),DESCRIPTION('Create DEBUG Files')
+#DECLARE(%EchoLine)
+#!
+#!---
+#IF(~%CLSkelAppDisable)
+#!---
+#CREATE(%SelFilePRJ)
+
+#IF(%GenSourceFiles)
+#SET(%EchoLine,'  #pragma define(profile=>on)')
+#ELSE
+#SET(%EchoLine,'  #pragma define(profile=>off)')
+#END
+%EchoLine
+
+#SET(%EchoLine,'  #if define(profile)=on #then')
+%EchoLine
+#SET(%EchoLine,'    #compile "' & %SourceName & '.clw" /define(profile=>off)')
+%EchoLine
+#SET(%EchoLine,'  #endif')
+%EchoLine
+
+#CLOSE(%SelFilePRJ)
+#!---
+#ELSE
+#REMOVE(%SelFilePRJ)
+#END
+#!---
+#!
+#!---
+#IF(~%CLSkelAppDisable)
+#!---
+#CREATE(%SelFileCLW)
+  MEMBER
+  MAP
+    EnterProc(UNSIGNED Line,*CSTRING Proc,*CSTRING File),NAME('Profile:EnterProc')
+    LeaveProc(),NAME('Profile:LeaveProc')
+    ODS(STRING xMSG),NAME('Profile:ODS')
+
+    MODULE('kernel')     
+      OutputDebugString(*CSTRING),PASCAL,RAW,NAME('OutputDebugStringA')
+    END  
+  END
+  
+!  Omit('************** Documentation ****************')
+!  @================================================================================================
+!  Purpose : To support the pragma profile=>on
+!            note: CASE SENSITIVE: it seems that Profile=>on doesn`t work, but profile=>on does work
+!
+!  Notice  : This code evolved from a copy of C55\Libsrc\Profile.clw
+!            It has been modified by Mark Goldberg (Clarion@MonolithCC.com)
+!            This version was modified by Roberto Artigas (roberto.artigas.dev@gmail.com)
+!            Mark's version was heavy duty and my needs where a bit simpler.
+!
+!  How to Use:
+!            In the project editor -> (top line) Properties -> Define
+!               add the define:    profile
+!               note: this IS CASE SENSITIVE
+!
+!            In the project editor -> add file
+!               add ProfileRA.PRJ
+!
+!  Updates:
+!  June 4th, 2003   - Tested using SkipW`s Debuger, was failing because the 2nd arg was not TRUE
+!                   - Currently configured use the Debuger
+!                   - Added prototypes for Profile_PrintDebugString from the RTL
+!  April 10th, 2014 - Removed all external references.
+!
+!  @================================================================================================
+!  Omit('************** Documentation ****************')
+
+!!! --- contents of ProfileRA.PRJ
+!!! --- Note: The file should be located by the pathing in the RED file vs hardwired paths on the compile line.
+!!!
+!!!   #pragma define(profile=>on)
+!!!
+!!!   #if define(profile)=on #then
+!!!     #compile "ProfileRA.clw" /define(profile=>off)
+!!!   #end
+!!!
+!!! --- contents of ProfileRA.PRJ -end
+
+Profile_Prefix    EQUATE('`')
+
+mod:CallDepth     LONG(0),Static
+mod:CallLevel     LONG(0),Static
+
+Q     QUEUE
+Line              UNSIGNED
+File              STRING(40)
+Proc              STRING(60)
+Thread            BYTE
+Depth             LIKE(mod:CallDepth)
+      END
+
+COMPILE('***',profile)
+ Don`t try and profile this, you get infinite recursion!
+ Set profile=>off on this module in the project
+
+ This comment will prevent you from compiling without the profile=>off on this module
+***
+
+!Region Local Procedures
+!==============================================================================
+ODS              PROCEDURE(STRING xMSG)
+!==============================================================================
+szMSG            &CSTRING
+ CODE
+ szMSG          &= NEW CSTRING( SIZE(xMSG) + 3 )   ! 3 = LEN(<13,10,0>)
+ szMSG           = xMSG & '<13,10>'
+ OutputDebugString(szMSG)
+ DISPOSE(szMSG)
+
+!==============================================================================
+EnterProc        PROCEDURE(unsigned Line,*cstring Proc,*cstring File)
+!==============================================================================
+  CODE
+
+  mod:CallDepth += 1
+  Q.Line         = Line
+  Q.File         = LOWER(File)
+  Q.Proc         = Proc
+  Q.Thread       = Thread()
+  Q.Depth        = mod:CallDepth
+  ADD(Q)
+
+  CASE (CLIP(Q.File))
+#IF(ITEMS(%DoTheseFiles) < 1)
+  OF   'no_source_selected'
+#ENDIF
+#SET(%FirstTime,%True)
+#FOR(%DoTheseFiles)
+  #IF(%FirstTime)
+    #SET(%FirstTime,%False)
+    #SET(%EchoLine, 'OF   ''' & LOWER(%doFile) & '''')
+  %EchoLine   
+  #ELSE
+    #SET(%EchoLine, 'OROF ''' & LOWER(%doFile) & '''')
+  %EchoLine   
+  #END
+#ENDFOR
+
+  mod:CallLevel += 1
+  
+  ODS(Profile_Prefix & '(' & FORMAT(mod:CallLevel,@N03) & ') ---enter--- thread(' & FORMAT(Q.Thread,@N02) & |
+      ') ' & CLIP(Q.Proc) & ' [' & CLIP(Q.File) & ',' & Q.Line & ']')
+
+  END
+
+!==============================================================================
+LeaveProc        PROCEDURE()
+!==============================================================================
+  CODE
+
+  GET(Q, mod:CallDepth)
+
+  CASE (CLIP(Q.File))
+#IF(ITEMS(%DoTheseFiles) < 1)
+  OF   'no_source_selected'
+#ENDIF
+#SET(%FirstTime,%True)
+#FOR(%DoTheseFiles)
+  #IF(%FirstTime)
+    #SET(%FirstTime,%False)
+    #SET(%EchoLine, 'OF   ''' & LOWER(%doFile) & '''')
+  %EchoLine   
+  #ELSE
+    #SET(%EchoLine, 'OROF ''' & LOWER(%doFile) & '''')
+  %EchoLine   
+  #END
+#ENDFOR
+
+  ODS(Profile_Prefix & '(' & FORMAT(mod:CallLevel,@N03) & ') ---leave--- thread(' & FORMAT(Q.Thread,@N02) & |
+      ') ' & CLIP(Q.Proc) & ' [' & CLIP(Q.File) & ',' & Q.Line & ']')
+
+  mod:CallLevel -= 1
+
+  END
+
+  delete(Q)
+  mod:CallDepth -= 1
+
+!==============================================================================
+!EndRegion Local Procedures
+#CLOSE(%SelFileCLW)
+#!---
+#ELSE
+#REMOVE(%SelFileCLW)
+#END
+#!---
+#ENDAT
+#!---------------------------------------------------------------------
+#! Changes:
+#! 2014.04.13   Roberto Artigas
+#!      Disabled the #PROJECT (results not desired)
+#!      Using the ---old--- syntax puts it in the "Libraries, Objects and Resource Files" location (this is incorrect)
+#!      Using the ---new--- syntax puts it in the "Projects to include" location (this produces error and nothing happens)
+#AT(%CustomGlobalDeclarations)
+#!PROJECT(%SelFileINC)  #! RA.2014.04.13 - Disabled for now
+#ENDAT
+#!--------------------------------------------------------------------- 
+#!---------------------------------------------------------------------
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabInstructions3) 
+#TAB('Instructions')
+  #DISPLAY('Location:'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('The location of the files you are about to generate.' )
+  #DISPLAY('')
+  #DISPLAY('Name:'),AT(10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('The name of the files to generate without the extension.' )
+  #DISPLAY('NOTE: Currently this is disabled.')
+  #DISPLAY('')
+  #DISPLAY('Source Files Button'),AT(10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('This allows you to select the source CLW files you want to debug.')
+  #DISPLAY('Normal is to select <39>your<39> classes to debug when running a program')
+  #DISPLAY('during development, testing and problem research.')
+  #DISPLAY('')
+  #DISPLAY('')
+  #DISPLAY('EXTREME WARNING'),AT(10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Selecting ABC standard classes can produce very large debug output.')
+  #DISPLAY('This is specially true for <39>ABBROWSE.CLW<39> and a few other classes.')
+  #DISPLAY('Save yourself discomfort and DO NOT do this. You have been warned.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabRealityCheck3) 
+#TAB('Reality Check'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('REALITY CHECK'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('')
+  #DISPLAY('The reality of tracing source is that it is useful testing small')
+  #DISPLAY('programs and classes. Great for hand coders or class testing.' )
+  #DISPLAY('')
+  #DISPLAY('Source testing generated applications, the problem is that this')
+  #DISPLAY('process traces everything. Shows what you want, traces everything.')
+  #DISPLAY('Every ENTRY and EXIT in every procedure, routine and class method.')
+  #DISPLAY('')
+  #DISPLAY('Which slows everything. Not very useful for generated source code.')
+  #DISPLAY('You can expect to see a waiting cursor most of the time.')
+  #DISPLAY('')
+  #DISPLAY('Use the correct debugging tool for the correct problem.')
+  #DISPLAY('')
+  #DISPLAY('For generated applications stick to trace all procedures and avoid')
+  #DISPLAY('the source code file trace feature. You will be glad you did.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabLimitations3) 
+#TAB('Limitations')
+  #DISPLAY('')
+  #DISPLAY('You will have to add the resulting PRJ file by hand into the'),PROP(PROP:FontStyle,700)
+  #DISPLAY('<39>Projects to include<39> location.'),PROP(PROP:FontStyle,700)
+  #DISPLAY('')
+  #DISPLAY('Instructions (First Time)')
+  #DISPLAY('')
+  #DISPLAY('1. Set up the template')
+  #DISPLAY('2. Generate the program')
+  #DISPLAY('3. Include the project file')
+  #DISPLAY('4. Do the compile')
+  #DISPLAY('')
+  #DISPLAY('If you turn OFF the UltimateDebug option on the main template'),PROP(PROP:FontStyle,700)
+  #DISPLAY('remove PRJ file from the <39>Projects to include<39> location.'),PROP(PROP:FontStyle,700)
+  #DISPLAY('')
+  #DISPLAY('')
+  #DISPLAY('Question that needs an answer:'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('How to ADD and REMOVE the PRJ file with the template language?'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #!DISPLAY('')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabPurpose3) 
+#TAB('Purpose')
+  #DISPLAY('This template will let you trace thru every entry and exit point')
+  #DISPLAY('using the Clarion<39>s <39>profile.clw<39> trace mechanism.')
+  #DISPLAY('')
+  #DISPLAY('By including source files you can debug class methods, routines,')
+  #DISPLAY('and all sort of mischellaneous source code.')
+  #DISPLAY('')
+  #DISPLAY('Please be aware that this can produce a lot of debug messages.')
+  #DISPLAY('So you might want to avoid some of the large ABC classes.')
+  #DISPLAY('')
+  #DISPLAY('')
+  #DISPLAY('Mark Goldberg'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Is gratefully acknowledged for pointing out a feature that has')
+  #DISPLAY('been around in Clarion for a while and available to all.')
+  #DISPLAY('')
+  #DISPLAY('Proving his statement: <39>You will know if you read the code.<39>')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabTesting3) 
+#TAB('Testing')
+  #DISPLAY('Tested 2014-04-14 with C9 and ABC templates.')
+  #DISPLAY('Tested 2014-04-15 with C9 and LEGACY templates.')
+  #DISPLAY('')
+  #DISPLAY('No other tests done.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabPurpose3a) 
+#TAB('Purpose')
+  #DISPLAY('This is the list of the source files to debug trace.')
+  #DISPLAY('')
+  #DISPLAY('There are buttons to perform maintenance operations on the source')
+  #DISPLAY('file list that you want to debug trace.')
+  #DISPLAY('')
+  #DISPLAY('')
+  #DISPLAY('IMPORTANT:'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Please have at least one source file in the list.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabInstructions3a) 
+#TAB('Instructions')
+  #DISPLAY('Insert'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Add a source file name to the debug list.' )
+  #DISPLAY('')
+  #DISPLAY('Properties'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Change a source file name in the debug list.' )
+  #DISPLAY('')
+  #DISPLAY('Delete'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Delete a source file name in the debug list.' )
+  #DISPLAY('')
+  #DISPLAY('Up Arrow'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Move the selected source file name up in the debug list.' )
+  #DISPLAY('')
+  #DISPLAY('Down Arrow'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Move the selected source file name down in the debug list.' )
+  #!DISPLAY('')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabPurpose3b) 
+#TAB('Purpose')
+  #DISPLAY('This is where you enter or select the source file you want to debug.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabInstructions3b) 
+#TAB('Instructions')
+  #DISPLAY('Ask for File:'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Enter a file name for debug. Preferably a source code CLW file.' )
+  #DISPLAY('')
+  #DISPLAY('File Selection Button'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Select the file for debug. Preferably a source code CLW file.')
+  #!DISPLAY('')
+#ENDTAB
+#!---------------------------------------------------------------------
+
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------

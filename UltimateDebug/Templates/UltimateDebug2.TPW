@@ -1,0 +1,1506 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! File Name:   UltimateDebug2.TPW
+#! Purpose:     Template add-on's to do mass global debugging on applications.
+#! Author:      Copyright © 1999-2014 by Roberto Artigas. All rights reserved world wide.
+#!              Released under the Clarion Open Source License. (http://www.clarionmag.com/cmag/dospl.html)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!
+#!--------------------------------------------------------------------
+#EXTENSION(DebugTraceInit,'RA.2014.04.15: Markers for GLOBAL Embed Locations'),APPLICATION,REQ(UltimateDebugGlobal)
+#!--------------------------------------------------------------------
+#! RA.2014.04.12 - Some cosmetics for the UltimateDebug template set
+#! RA.2010.12.09 - Changed FIRST->0005 and LAST->9995. Good thing to do.
+#! RA.2010.11.04 - Added LOCAL %TraceCode and GLOBAL ~%CLSkelAppDisable
+#! RA.2010.10.12 - Added "GlobalMap", "ExportFile", and "ShipList" #EMBED points.
+#!--------------------------------------------------------------------
+#DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('')
+#DISPLAY('')
+#DISPLAY('')
+#DISPLAY('')
+#SHEET,AT(,,288),HSCROLL
+#TAB('General')
+#BOXED(' Markers for GLOBAL Embed Locations'),AT(,,280)
+  #ENABLE(~%CLSkelAppDisable)
+    #DISPLAY('')
+    #PROMPT('Generate Marker Code',CHECK),%TraceCode,DEFAULT(1),AT(10)
+    #DISPLAY('')
+  #ENDENABLE
+#ENDBOXED
+#ENDTAB
+#INSERT(%TabPurpose2a)
+#INSERT(%TabTesting2a) 
+#ENDSHEET
+#!#DISPLAY('Copyright © 1999-2014 by Roberto Artigas')
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeGlobalIncludes),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeGlobalIncludes),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeGlobalIncludes),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeGlobalIncludes),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterGlobalIncludes),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterGlobalIncludes),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterGlobalIncludes),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterGlobalIncludes),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeFileDeclarations),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeFileDeclarations),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeFileDeclarations),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeFileDeclarations),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterFileDeclarations),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! AT(%%AfterFileDeclarations),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterFileDeclarations),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterFileDeclarations),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramRoutines),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramRoutines),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramRoutines),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramRoutines),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramProcedures),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramProcedures),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramProcedures),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramProcedures),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%BeforeCategoryDLLInitCode,'ABC'),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeCategoryDLLInitCode,'ABC'),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeCategoryDLLInitCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeCategoryDLLInitCode,'ABC'),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeCategoryDLLInitCode,'ABC'),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeCategoryDLLInitCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%CategoryDLLInitCode,'ABC'),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%CategoryDLLInitCode,'ABC'),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%CategoryDLLInitCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%CategoryDLLInitCode,'ABC'),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%CategoryDLLInitCode,'ABC'),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%CategoryDLLInitCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterCategoryDLLInitCode,'ABC'),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterCategoryDLLInitCode,'ABC'),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterCategoryDLLInitCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterCategoryDLLInitCode,'ABC'),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterCategoryDLLInitCode,'ABC'),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterCategoryDLLInitCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%BeforeCategoryDLLKillCode,'ABC'),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeCategoryDLLKillCode,'ABC'),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeCategoryDLLKillCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeCategoryDLLKillCode,'ABC'),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeCategoryDLLKillCode,'ABC'),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeCategoryDLLKillCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%CategoryDLLKillCode,'ABC'),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%CategoryDLLKillCode,'ABC'),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(CategoryDLLKillCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%CategoryDLLKillCode,'ABC'),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%CategoryDLLKillCode,'ABC'),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(CategoryDLLKillCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterCategoryDLLKillCode,'ABC'),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterCategoryDLLKillCode,'ABC'),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterCategoryDLLKillCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterCategoryDLLKillCode,'ABC'),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterCategoryDLLKillCode,'ABC'),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterCategoryDLLKillCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%DLLInitCode),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DLLInitCode),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DLLInitCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DLLInitCode),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DLLInitCode),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DLLInitCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DLLKillCode),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DLLKillCode),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DLLKillCode),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DLLKillCode),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DLLKillCode),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DLLKillCode),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%BeforeInitGlobalDllObjects),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeInitGlobalDllObjects),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeInitGlobalDllObjects),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeInitGlobalDllObjects),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeInitGlobalDllObjects),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeInitGlobalDllObjects),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterInitGlobalDllObjects),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterInitGlobalDllObjects),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterInitGlobalDllObjects),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterInitGlobalDllObjects),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterInitGlobalDllObjects),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterInitGlobalDllObjects),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%AfterEntryPointCodeStatement),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterEntryPointCodeStatement),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterEntryPointCodeStatement),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterEntryPointCodeStatement),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterEntryPointCodeStatement),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterEntryPointCodeStatement),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramSetup),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+   #IF(%ProgramExtension = 'EXE')
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramSetup),PRIORITY(0005) !!! EXE !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramSetup),PRIORITY(0005): %Application')
+   #ELSE
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramSetup),PRIORITY(0005) !!! DLL !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramSetup),PRIORITY(0005): %Application')
+   #END
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramSetup),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+   #IF(%ProgramExtension = 'EXE')
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramSetup),PRIORITY(9995) !!! EXE !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramSetup),PRIORITY(9995): %Application')
+   #ELSE
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramSetup),PRIORITY(9995) !!! DLL !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramSetup),PRIORITY(9995): %Application')
+   #END
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramEnd),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+   #IF(%ProgramExtension = 'EXE')
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramEnd),PRIORITY(0005) !!! EXE !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramEnd),PRIORITY(0005): %Application')
+   #ELSE
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramEnd),PRIORITY(0005) !!! DLL !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramEnd),PRIORITY(0005): %Application')
+   #END
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ProgramEnd),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+   #IF(%ProgramExtension = 'EXE')
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramEnd),PRIORITY(9995) !!! EXE !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramEnd),PRIORITY(9995): %Application')
+   #ELSE
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ProgramEnd),PRIORITY(0005) !!! DLL !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%ProgramEnd),PRIORITY(9995): %Application')
+   #END
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%DictionaryConstruct),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DictionaryConstruct),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DictionaryConstruct),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DictionaryConstruct),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DictionaryConstruct),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DictionaryConstruct),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DictionaryDestruct),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DictionaryDestruct),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DictionaryDestruct),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DictionaryDestruct),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DictionaryDestruct),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DictionaryDestruct),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%BeforeDctInitialization),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeDctInitialization),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeDctInitialization),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeDctInitialization),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeDctInitialization),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeDctInitialization),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterDctInitialization),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterDctInitialization),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterDctInitialization),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterDctInitialization),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterDctInitialization),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterDctInitialization),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeDctDestruction),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeDctDestruction),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeDctDestruction),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeDctDestruction),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%BeforeDctDestruction),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%BeforeDctDestruction),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterDctDestruction),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterDctDestruction),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterDctDestruction),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterDctDestruction),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%AfterDctDestruction),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%AfterDctDestruction),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%DctInitStart),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctInitStart),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctInitStart),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DctInitStart),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctInitStart),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctInitStart),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DctInitEnd),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctInitEnd),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctInitEnd),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DctInitEnd),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctInitEnd),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctInitEnd),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DctKillStart),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctKillStart),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctKillStart),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DctKillStart),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctKillStart),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctKillStart),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DctKillEnd),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctKillEnd),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctKillEnd),PRIORITY(0005): %Application')
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DctKillEnd),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%DctKillEnd),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#!%CLSkelClass.Debug('#AT(%DctKillEnd),PRIORITY(9995): %Application')
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%GlobalMap),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!#AT(%%GlobalMap),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%GlobalMap),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%GlobalMap),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%AfterCreatingExportFile),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; #AT(%%AfterCreatingExportFile),PRIORITY(0005) ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%AfterCreatingExportFile),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; #AT(%%AfterCreatingExportFile),PRIORITY(9995) ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DLLExportList),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; #AT(%%DLLExportList),PRIORITY(0005) ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%DLLExportList),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; #AT(%%DLLExportList),PRIORITY(9995) ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeClosingExports),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; #AT(%%BeforeClosingExports),PRIORITY(0005) ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%BeforeClosingExports),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; #AT(%%BeforeClosingExports),PRIORITY(9995) ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%ShipList),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ShipList),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%ShipList),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%ShipList),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+
+#!--------------------------------------------------------------------
+#AT(%GlobalData),PRIORITY(0005)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%GlobalData),PRIORITY(0005) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#AT(%GlobalData),PRIORITY(9995)
+#!--------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! #AT(%%GlobalData),PRIORITY(9995) !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ #ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#GROUP(%TabPurpose2a) 
+#TAB('Purpose')
+  #DISPLAY('This template will let you know where the GLOBAL embed points')
+  #DISPLAY('are located in Clarion<39>s generated source code.')
+  #DISPLAY('')
+  #DISPLAY('Places with Markers:')
+  #DISPLAY('Main program')
+  #DISPLAY('DLL Export List')
+  #DISPLAY('Ship List')
+  #DISPLAY('')
+  #DISPLAY('This is for those individuals that just have to know.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabTesting2a) 
+#TAB('Testing')
+  #DISPLAY('Tested 2014-04-14 with C9 and ABC templates.')
+  #DISPLAY('Tested 2014-04-15 with C9 and LEGACY templates.')
+  #DISPLAY('')
+  #DISPLAY('No other tests done.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#ENDTAB
+#!--------------------------------------------------------------------
+#GROUP(%DebugTraceInitEnd)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+
+
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#EXTENSION(DebugTraceTotal, 'RA.2014.04.15: Debug Trace ALL procedures'),APPLICATION,REQ(UltimateDebugGlobal)
+#!--------------------------------------------------------------------
+#! Created By:  Roberto Artigas
+#! Modifications:
+#! 2010.11.04   Roberto Artigas
+#!  *   Added GLOBAL ~%CLSkelAppDisable
+#! 2005.09.28   Roberto Artigas
+#!  *   Added #EMBED statements
+#!--------------------------------------------------------------------
+#!
+#DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('')
+#DISPLAY('')
+#DISPLAY('')
+#DISPLAY('')
+#SHEET,AT(,,288),HSCROLL
+#TAB('General')
+#BOXED(' Debug Trace Total '),AT(,,280)
+  #ENABLE(~%CLSkelAppDisable)
+    #DISPLAY('')
+    #PROMPT('Generate Trace Code ' , CHECK), %TraceCode, DEFAULT(1), AT(10)
+    #DISPLAY('')
+    #PROMPT('Show LOCAL Templates ', CHECK), %ShowLocalTemplates, DEFAULT(1), AT(10)
+    #DISPLAY('')
+  #ENDENABLE
+#ENDBOXED
+#ENDTAB
+#INSERT(%TabPurpose2b)
+#INSERT(%TabInstructions2b) 
+#INSERT(%TabTesting2b) 
+#ENDSHEET
+#!#DISPLAY('Copyright © 1999-2014 by Roberto Artigas')
+#!---------------------------------------------------------------------
+#! %ProcedureTemplate = 'Source'
+#! %ProcedureTemplate = 'Window'
+#! %ProcedureTemplate = 'Frame'
+#! %ProcedureTemplate = 'Process'
+#! %ProcedureTemplate = 'Report'
+#! %ProcedureTemplate = 'Todo'
+#!---------------------------------------------------------------------
+#AT(%DataSection,%ActiveTemplateInstance),PRIORITY(0005)
+ #CASE(UPPER(%ProcedureTemplate))
+ #OF  ('TODO')
+ #OROF('SOURCE')
+ #OROF('WINDOW')
+ #OROF('FRAME')
+ #OROF('PROCESS')
+ #OROF('REPORT')
+! === %ProcedureTemplate ===
+ #ELSE
+! ??? %ProcedureTemplate ???
+ #ENDCASE
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+UD_TRACE EQUATE(1)  #<! Ultimate Debug TRACE is ON
+ #ELSE
+UD_TRACE EQUATE(0)  #<! Ultimate Debug TRACE is OFF
+ #ENDIF
+ #CASE(UPPER(%ProcedureTemplate))
+ #OF  ('TODO')
+ #OROF('SOURCE')
+ #OROF('WINDOW')
+ #OROF('FRAME')
+ #OROF('PROCESS')
+ #OROF('REPORT')
+! === %ProcedureTemplate ===
+ #ELSE
+! ??? %ProcedureTemplate ???
+ #ENDCASE
+#ENDAT
+#!---------------------------------------------------------------------
+#! %ProcedureTemplate = 'Source'
+#!---------------------------------------------------------------------
+#AT(%ProcessedCode),PRIORITY(0005)
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate ===
+  %CLSkelClass.DebugEntry('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug ENTRY %ProcedureTemplate
+ #ENDIF
+ #IF(%TraceCode AND ~%CLSkelAppDisable AND %ShowLocalTemplates)
+  #IF(ITEMS(%ActiveTemplate))
+  %CLSkelClass.DebugLevel('----------------> LOCAL TEMPLATES')
+   #FOR(%ActiveTemplate)
+  %CLSkelClass.DebugLevel('Active Templates: %[18]ActiveTemplateType %ActiveTemplate ')
+   #ENDFOR
+  %CLSkelClass.DebugLevel('---------------->')
+  #ENDIF
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#AT(%ProcessedCode),PRIORITY(9995)
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate ===
+  %CLSkelClass.DebugExit('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug EXITS %ProcedureTemplate
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! %ProcedureTemplate = 'Window'
+#! %ProcedureTemplate = 'Frame'
+#! %ProcedureTemplate = 'Process'
+#! %ProcedureTemplate = 'Report'
+#! %ProcedureTemplate = 'Todo'
+#!---------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(0005)
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate ===
+%CLSkelClass.DebugEntry('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug ENTRY %ProcedureTemplate
+ #ENDIF
+ #IF(%TraceCode AND ~%CLSkelAppDisable AND %ShowLocalTemplates)
+  #IF(ITEMS(%ActiveTemplate))
+%CLSkelClass.DebugLevel('----------------> LOCAL TEMPLATES')
+   #FOR(%ActiveTemplate)
+%CLSkelClass.DebugLevel('Active Templates: %[18]ActiveTemplateType %ActiveTemplate ')
+   #ENDFOR
+%CLSkelClass.DebugLevel('---------------->')
+  #ENDIF
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(5090)
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+  #COMMENT(90)
+! === %ProcedureTemplate ===
+IF ReturnValue THEN
+  %CLSkelClass.DebugExit('%Application (%Module): %Procedure (%ProcedureTemplate) INIT Options from Globals') #<! Ultimate Debug EXITS %ProcedureTemplate
+  RETURN ReturnValue
+END
+! === %ProcedureTemplate ===
+  #COMMENT(60)
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Kill','(),BYTE'),PRIORITY(5090)
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+  #COMMENT(90)
+! === %ProcedureTemplate ===
+IF ReturnValue THEN
+  %CLSkelClass.DebugExit('%Application (%Module): %Procedure (%ProcedureTemplate) KILL Short-Stop') #<! Ultimate Debug EXITS %ProcedureTemplate
+  RETURN ReturnValue
+END
+! === %ProcedureTemplate ===
+  #COMMENT(60)
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Kill','(),BYTE'),PRIORITY(9995)
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate ===
+%CLSkelClass.DebugExit('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug EXITS %ProcedureTemplate
+! === %ProcedureTemplate ===
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! %ProcedureTemplate = ???
+#!---------------------------------------------------------------------
+#! 2015.04.15   Roberto Artigas
+#!   *  Added LEGACY support (modifying the original source back)
+#! 2014.04.14   Roberto Artigas
+#!   *  This used to be the original template source that handled ABC and LEGACY code.
+#!      I have made modification to handle any UNKNOWN %ProcedureTemplate types.
+#!      The key thing is the %ProcedureInitialize and %EndOfProcedure EMBED points.
+#!      When I research this way back, those were common EMBED points for everything.
+#!---------------------------------------------------------------------
+#AT(%ProcedureInitialize),PRIORITY(0005)
+#IF(%CLSkelFamily = 'ABC')
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+  #CASE(UPPER(%ProcedureTemplate))
+  #OF  ('TODO')
+  #OROF('WINDOW')
+  #OROF('FRAME')
+  #OROF('PROCESS')
+  #OROF('REPORT')
+  #ELSE
+! === %ProcedureTemplate ===
+%CLSkelClass.DebugEntry('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug ENTRY %ProcedureTemplate
+  #ENDCASE
+#ENDIF
+ #IF(%TraceCode AND ~%CLSkelAppDisable AND %ShowLocalTemplates)
+  #IF(ITEMS(%ActiveTemplate))
+   #CASE(UPPER(%ProcedureTemplate))
+   #OF  ('TODO')
+   #OROF('WINDOW')
+   #OROF('FRAME')
+   #OROF('PROCESS')
+   #OROF('REPORT')
+   #ELSE
+#! #EMBED(%DebugTraceProcedureBefore,'DebugTraceProcedure: Before TRACE statement')
+%CLSkelClass.Debug('----------------> LOCAL TEMPLATES')
+   #FOR(%ActiveTemplate)
+%CLSkelClass.Debug('Active Templates: %[18]ActiveTemplateType %ActiveTemplate ')
+   #ENDFOR
+%CLSkelClass.Debug('---------------->')
+! === %ProcedureTemplate ===
+   #ENDCASE
+  #ENDIF
+ #ENDIF
+#!--------------------------------------------------------------------- 
+#ELSE                                               #! RA.2014.04.15 - LEGACY support
+#!---------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate ===
+%CLSkelClass.DebugEntry('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug ENTRY %ProcedureTemplate
+ #ENDIF
+ #IF(%TraceCode AND ~%CLSkelAppDisable AND %ShowLocalTemplates)
+  #IF(ITEMS(%ActiveTemplate))
+#! #EMBED(%DebugTraceProcedureBefore,'DebugTraceProcedure: Before TRACE statement')
+%CLSkelClass.Debug('----------------> LOCAL TEMPLATES')
+   #FOR(%ActiveTemplate)
+%CLSkelClass.Debug('Active Templates: %[18]ActiveTemplateType %ActiveTemplate ')
+   #ENDFOR
+%CLSkelClass.Debug('---------------->')
+! === %ProcedureTemplate ===
+  #ENDIF
+ #ENDIF
+#ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#! RA.2014.04.15 - Added LEGACY support
+#!---------------------------------------------------------------------
+#AT(%EndOfProcedure),PRIORITY(9995)
+#IF(%CLSkelFamily = 'ABC')
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+  #CASE(UPPER(%ProcedureTemplate))
+  #OF  ('TODO')
+  #OROF('WINDOW')
+  #OROF('FRAME') 
+  #OROF('PROCESS')
+  #OROF('REPORT')
+  #ELSE
+! === %ProcedureTemplate ===
+  #IF(%ProcedureTemplate='Frame')
+  #ENDIF
+%CLSkelClass.DebugExit('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug EXITS %ProcedureTemplate
+! === %ProcedureTemplate ===
+  #ENDCASE
+ #ENDIF
+#!---------------------------------------------------------------------
+#ELSE                                               #! RA.2014.04.15 - LEGACY support
+#!---------------------------------------------------------------------
+ #IF(%TraceCode AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate ===
+  #IF(%ProcedureTemplate='Frame')
+  #ENDIF
+%CLSkelClass.DebugExit('%Application (%Module): %Procedure (%ProcedureTemplate)') #<! Ultimate Debug EXITS %ProcedureTemplate
+! === %ProcedureTemplate ===
+ #ENDIF
+#END
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#GROUP(%TabPurpose2b) 
+#TAB('Purpose')
+  #DISPLAY('This template will insert ENTRY and EXITS debug statements into')
+  #DISPLAY('every procedure in Clarion<39>s generated source code.')
+  #DISPLAY('')
+  #DISPLAY('The debug message contains the application name, module name and')
+  #DISPLAY('procedure name. So you know the source file that contains the code.')
+  #DISPLAY('')
+  #DISPLAY('On the ABC WINDOW class it adds an ENTRY and EXITS debug message.')
+  #DISPLAY('')
+  #DISPLAY('The ENTRY is handled in <39>ThisWindow.Init<39>. Priority(0005).')
+  #DISPLAY('The EXITS is handled in <39>ThisWindow.Kill<39>. Priority(9995).')
+  #DISPLAY('')
+  #DISPLAY('In those methods, there are return statements in the middle of the')
+  #DISPLAY('code. An EXITS debug message is generated at PRIORITY(5090).')
+  #!DISPLAY('')
+#ENDTAB
+#!
+#!--------------------------------------------------------------------
+#GROUP(%TabInstructions2b) 
+#TAB('Instructions')
+  #DISPLAY('Generate Trace Code'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('This turns ON and OFF the generate debug code to every procedure.')
+  #DISPLAY('')
+  #DISPLAY('When using the Trace ALL an equate is added to every procedure.')
+  #DISPLAY('UD_TRACE EQUATE(1), which is the value when the Trace ALL is ON.')
+  #DISPLAY('UD_TRACE EQUATE(0), which is the value when the Trace ALL is OFF.')
+  #DISPLAY('')
+  #DISPLAY('When using the CODE template for additional debug code beyond')
+  #DISPLAY('the ENTRY and EXITS that are automatically generated, if you turn')
+  #DISPLAY('the Trace ALL template OFF, the hand code will be preserved.')
+  #DISPLAY('')
+  #DISPLAY('Show LOCAL Tenmplates'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('This will add debug to show LOCAL active templates for procedures.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabTesting2b) 
+#TAB('Testing')
+  #DISPLAY('Tested 2014-04-14 with C9 and ABC templates.')
+  #DISPLAY('Tested 2014-04-15 with C9 and LEGACY templates.')
+  #DISPLAY('')
+  #DISPLAY('No other tests done.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#ENDTAB
+#!---------------------------------------------------------------------
+#GROUP(%DebugTraceTotalEnd)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+
+#!-----------------------------------------------------------------------
+#!-----------------------------------------------------------------------
+#!-----------------------------------------------------------------------
+#CODE(DebugTraceCode,'RA.2014.04.15: Debug Trace Code'),MULTI,REQ(UltimateDebugGlobal)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('')
+#DISPLAY('')
+#DISPLAY('')
+#!DISPLAY('')
+#SHEET,AT(,,288),HSCROLL
+#TAB('General')
+  #DISPLAY('When using the Trace ALL an equate is added to every procedure.')
+  #DISPLAY('')
+  #DISPLAY('UD_TRACE EQUATE(1), which is the value when the Trace ALL is ON.')
+  #DISPLAY('UD_TRACE EQUATE(0), which is the value when the Trace ALL is OFF.')
+  #DISPLAY('')
+  #DISPLAY('When using the CODE template for additional debug code beyond')
+  #DISPLAY('the ENTRY and EXITS that are automatically generated, if you turn')
+  #DISPLAY('the Trace ALL template OFF, the hand code will be preserved.')
+#ENDTAB
+#ENDSHEET
+#!-----------------------------------------------------------------------
+#INDENT(-1)
+! === %ProcedureTemplate ===
+COMPILE('!***TRACE***', UD_TRACE)
+#EMBED(%DebugTraceCode, 'Debug Trace Code'),%ActiveTemplateInstance,MAP(%ActiveTemplateInstance,%ActiveTemplateInstanceDescription)
+!***TRACE***
+! === %ProcedureTemplate ===
+#INDENT(+1)
+#!-----------------------------------------------------------------------
+#!-----------------------------------------------------------------------
+#GROUP(%DebugTraceCodeEnd)
+#!-----------------------------------------------------------------------
+#!-----------------------------------------------------------------------
+
+#!-----------------------------------------------------------------------
+#!-----------------------------------------------------------------------
+#!-----------------------------------------------------------------------
+#EXTENSION(DebugTraceEvents,'RA.2014.04.02: Add EVENT trace to a window'),PROCEDURE,REQ(UltimateDebugGlobal)
+#!-----------------------------------------------------------------------
+#! Created By:  Roberto Artigas
+#! Modifications:
+#! 2014.04.02   Roberto Artigas
+#!  *   Added %TraceAnEvent PROMPT for the DebugEvent(%TraceAnEvent) call.
+#! 2014.03.30   Roberto Artigas
+#!  *   Original Creation of this template
+#!-----------------------------------------------------------------------
+#RESTRICT
+ #IF(%Window)
+  #ACCEPT
+ #ELSE
+  #REJECT
+ #ENDIF
+#ENDRESTRICT
+#!-----------------------------------------------------------------------
+#DISPLAY('UltimateDebug'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('Version ' & %CLSkelTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#DISPLAY('')
+#DISPLAY('')
+#DISPLAY('')
+#DISPLAY('')
+#!DISPLAY('')
+#SHEET,AT(,,288),HSCROLL
+#TAB('General')
+#BOXED(' Options for Events '),AT(,,280)
+#ENABLE(~%CLSkelAppDisable)
+ #PROMPT('Enable Events Trace', CHECK),%TraceEvents,DEFAULT(1),AT(10)
+ #PROMPT('Event Name:',@S60),%TraceAnEvent,DEFAULT('')
+ #DISPLAY('HINT: Event Name is single quoted or empty')
+ #PROMPT('Add Events Initialization', CHECK),%TraceEventsInit,DEFAULT(1),AT(10)
+  #BOXED(' Set Options for TRUE values ')
+   #ENABLE(%TraceEvents AND %TraceEventsInit)
+    #PROMPT('Show All'        ,CHECK),%EventShowAll       ,DEFAULT(1),AT(10)
+    #PROMPT('Show Field'      ,CHECK),%EventShowField     ,DEFAULT(0),AT(10)
+    #PROMPT('Show Focus'      ,CHECK),%EventShowFocus     ,DEFAULT(0),AT(10)
+    #PROMPT('Show Selected'   ,CHECK),%EventShowSelected  ,DEFAULT(0),AT(10)
+    #PROMPT('Show SelStart'   ,CHECK),%EventShowSelStart  ,DEFAULT(0),AT(10)
+    #PROMPT('Show SelEnd'     ,CHECK),%EventShowSelEnd    ,DEFAULT(0),AT(10)
+    #PROMPT('Show KeyCode'    ,CHECK),%EventShowKeyCode   ,DEFAULT(0),AT(10)
+    #PROMPT('Show Error'      ,CHECK),%EventShowError     ,DEFAULT(0),AT(10)
+    #PROMPT('Show Thread'     ,CHECK),%EventShowThread    ,DEFAULT(0),AT(10)
+    #PROMPT('Show Contents'   ,CHECK),%EventShowContents  ,DEFAULT(0),AT(10)
+    #PROMPT('Show ScreenText' ,CHECK),%EventShowScreenText,DEFAULT(0),AT(10)
+    #PROMPT('Show AcceptAll'  ,CHECK),%EventShowAcceptAll ,DEFAULT(0),AT(10)
+   #ENDENABLE    
+  #ENDBOXED
+#ENDENABLE
+#ENDBOXED
+#ENDTAB
+#INSERT(%TabPurpose2c)
+#INSERT(%TabInstructions2c) 
+#INSERT(%TabTesting2c) 
+#ENDSHEET
+#!---------------------------------------------------------------------
+#! RA.2014.04.15 - ABC support
+#!---------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(0020)
+#IF(%CLSkelFamily = 'ABC')
+ #IF(%TraceCode AND %TraceEvents AND %TraceEventsInit AND ~%CLSkelAppDisable)
+#INSERT(%CheckTheFlags)
+ #ENDIF
+#ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#! RA.2014.04.15 - ABC support
+#!---------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'TakeEvent','(),BYTE'),PRIORITY(6310)
+#IF(%CLSkelFamily = 'ABC')
+ #IF(%TraceCode AND %TraceEvents AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate === #<! %Application (%Module): %Procedure
+#! #EMBED(%DebugTraceTotalBefore,'DebugTraceTotal: Before TRACE statement')
+#! %CLSkelClass.Debug('TraceEvent: START: %Application (%Module): %Procedure (%ProcedureTemplate)')
+%CLSkelClass.DebugEvent(%TraceAnEvent) #<! Ultimate Debug EVENT Tracking
+#! %CLSkelClass.Debug('TraceEvent: ENDED: %Application (%Module): %Procedure (%ProcedureTemplate)')
+#! #EMBED(%DebugTraceTotalAfter,'DebugTraceTotal: After TRACE statement')
+! === %ProcedureTemplate === #<! %Application (%Module): %Procedure
+ #ENDIF
+#ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#! RA.2014.04.15 - LEGACY support
+#!---------------------------------------------------------------------
+#AT(%ProcedureInitialize),PRIORITY(0020)
+#IF(%CLSkelFamily = 'LEGACY')
+ #IF(%TraceCode AND %TraceEvents AND %TraceEventsInit AND ~%CLSkelAppDisable)
+#INSERT(%CheckTheFlags)
+ #ENDIF
+#ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#! RA.2014.04.15 - LEGACY support
+#!---------------------------------------------------------------------
+#AT(%AcceptLoopBeforeEventHandling),PRIORITY(6310)  #! 4000
+#IF(%CLSkelFamily = 'LEGACY')
+ #IF(%TraceCode AND %TraceEvents AND ~%CLSkelAppDisable)
+! === %ProcedureTemplate === #<! %Application (%Module): %Procedure
+%CLSkelClass.DebugEvent(%TraceAnEvent) #<! Ultimate Debug EVENT Tracking
+! === %ProcedureTemplate === #<! %Application (%Module): %Procedure
+ #ENDIF
+#ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#GROUP(%CheckTheFlags)
+! === %ProcedureTemplate === #<! %Application (%Module): %Procedure
+  #IF(%EventShowAll)
+%CLSkelClass.ShowAll        = TRUE
+  #ELSE
+%CLSkelClass.ShowAll        = FALSE
+  #ENDIF
+#!
+  #IF(%EventShowField)
+%CLSkelClass.ShowField      = TRUE
+  #ELSE
+%CLSkelClass.ShowField      = FALSE
+  #ENDIF
+#! 
+  #IF(%EventShowFocus)
+%CLSkelClass.ShowFocus      = TRUE
+  #ELSE
+%CLSkelClass.ShowFocus      = FALSE
+  #ENDIF
+#! 
+  #IF(%EventShowSelected)
+%CLSkelClass.ShowSelected   = TRUE
+  #ELSE
+%CLSkelClass.ShowSelected   = FALSE
+  #ENDIF
+#! 
+  #IF(%EventShowSelStart)
+%CLSkelClass.ShowSelStart   = TRUE
+  #ELSE
+%CLSkelClass.ShowSelStart   = FALSE
+  #ENDIF
+#! 
+  #IF(%EventShowSelEnd)
+%CLSkelClass.ShowSelEnd     = TRUE
+  #ELSE
+%CLSkelClass.ShowSelEnd     = FALSE
+  #ENDIF
+#! 
+  #IF(%EventShowKeyCode)
+%CLSkelClass.ShowKeyCode    = TRUE
+  #ELSE
+%CLSkelClass.ShowKeyCode    = FALSE
+  #ENDIF
+#!
+  #IF(%EventShowError)
+%CLSkelClass.ShowError      = TRUE
+  #ELSE
+%CLSkelClass.ShowError      = FALSE
+  #ENDIF
+#!
+  #IF(%EventShowThread)
+%CLSkelClass.ShowThread     = TRUE
+  #ELSE
+%CLSkelClass.ShowThread     = FALSE
+  #ENDIF
+#!
+  #IF(%EventShowContents)
+%CLSkelClass.ShowContents   = TRUE
+  #ELSE
+%CLSkelClass.ShowContents   = FALSE
+  #ENDIF
+#!
+  #IF(%EventShowContents)
+%CLSkelClass.ShowContents   = TRUE
+  #ELSE
+%CLSkelClass.ShowContents   = FALSE
+  #ENDIF
+#!
+  #IF(%EventShowScreenText)
+%CLSkelClass.ShowScreenText = TRUE
+  #ELSE
+%CLSkelClass.ShowScreenText = FALSE
+  #ENDIF
+#!
+  #IF(%EventShowAcceptAll)
+%CLSkelClass.ShowAcceptAll  = TRUE
+  #ELSE
+%CLSkelClass.ShowAcceptAll  = FALSE
+  #ENDIF
+! === %ProcedureTemplate === #<! %Application (%Module): %Procedure
+#!
+#!--------------------------------------------------------------------
+#GROUP(%TabPurpose2c) 
+#TAB('Purpose')
+  #DISPLAY('This template adds the DebugTrace() code and intialization')
+  #DISPLAY('of the debug trace options in the correct embed points.')
+  #DISPLAY('')
+  #DISPLAY('Works for both ABC and LEGACY templates.')
+#ENDTAB
+#!
+#!--------------------------------------------------------------------
+#GROUP(%TabInstructions2c) 
+#TAB('Instructions')
+  #DISPLAY('Enable Events Trace'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('If ON the DebugEvent() call will be generated.')
+  #DISPLAY('')
+  #DISPLAY('Event Name:'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('The constant string that will be put between the parenthesis in')
+  #DISPLAY('the DebugEvent(<39>EventName<39>) call when you want to trace a')
+  #DISPLAY('specific event.')
+  #DISPLAY('')
+  #DISPLAY('Add Events Initialization'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('If ON the DebugEvent() variables will be generated.')
+  #DISPLAY('')
+  #DISPLAY('Set Options for TRUE values'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('All the DebugEvent() initialization variables will be generated.')
+  #DISPLAY('Each check box ON will generate the assignment as TRUE.')
+  #DISPLAY('Each check box OFF will generate the assignment as FALSE.')
+#ENDTAB
+#!
+#!---------------------------------------------------------------------
+#GROUP(%TabTesting2c) 
+#TAB('Testing')
+  #DISPLAY('Tested 2014-04-14 with C9 and ABC templates.')
+  #DISPLAY('Tested 2014-04-15 with C9 and LEGACY templates.')
+  #DISPLAY('')
+  #DISPLAY('No other tests done.'),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+#ENDTAB
+#!---------------------------------------------------------------------
+#GROUP(%DebugTraceEventsEnd)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#CODE(TheEmbedInfo,'RA.2001.09.11: Embed definition and information')
+#!--------------------------------------------------------------------
+#PREPARE
+  #CALL(%ReadABCFiles(ABC))
+#ENDPREPARE
+#!--------------------------------------------------------------------
+#DECLARE(%TwoParams,LONG)
+#DECLARE(%ThirdParams,LONG)
+#DECLARE(%ParamString,STRING)
+#!
+#IF(%EmbedParameters)
+  #CLEAR(%TwoParams)
+  #SET(%TwoParams,INSTRING(',',%EmbedParameters,1,1))
+  #IF(%TwoParams)
+    #IF(SUB(%EmbedParameters,(%TwoParams+2),1) <> '(')
+      #SET(%ThirdParams,INSTRING(',',%EmbedParameters,1,%TwoParams+2))
+      #SET(%ParamString,'''' & SUB(%EmbedParameters,1,(%TwoParams-1)) & ''',''' & SUB(%EmbedParameters,(%TwoParams+2),((%ThirdParams) - (%TwoParams+2))) & ''',''' & SUB(%EmbedParameters,(%ThirdParams+2),LEN(%EmbedParameters)) & '''')
+    #ELSE
+      #SET(%ParamString,'''' & SUB(%EmbedParameters,1,(%TwoParams-1)) & ''',''' & SUB(%EmbedParameters,(%TwoParams+2),LEN(%EmbedParameters)) & '''')
+    #END
+!>> #AT(%EmbedID,%ParamString),PRIORITY( ???? )
+  #ELSE
+!>> #AT(%EmbedID,'%EmbedParameters'),PRIORITY( ???? )
+  #ENDIF
+#ELSE
+!>> #AT(%EmbedID),PRIORITY( ???? )
+#ENDIF
+!>> !! What follows is debugging info
+!>> EmbedID........... = %EmbedID
+!>> EmbedParameters... = %EmbedParameters
+!>> Description....... = %EmbedDescription
+!>> Process........... = %ProcessType
+!>> Object............ = %ThisObjectName
+!>> TwoParams ........ = %TwoParams
+!>> ThreeParams....... = %ThirdParams
+#!--------------------------------------------------------------------
+#GROUP(%TheEmbedInfoEnd)
+#!--------------------------------------------------------------------
+
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#! 2011.03.15 - Roberto Artigas Jr
+#!   Combined the class family into one template.
+#! 2000.02.21 - Roberto Artigas Jr
+#!   Tested with ABC and the same code works for both.
+#! 2000.01.29 - Roberto Artigas Jr
+#!   This is used to make sure that the GLOBAL data area of a code only
+#!   DLL (no DCT, no FRAME) as a subroutine library does not export the
+#!   GlobalRequest, GlobalResponse, VcrRequest DATA variables which can
+#!   conflict (duplicate entries) when linking in with another DLL.
+#!   This HAS been tested with a 'Clarion' template generated DLL only.
+#!   This has NOT been tested with an 'ABC' template generated DLL.
+#!   A 'Clarion' generated DLL can link into an 'ABC' generated DLL.
+#!--------------------------------------------------------------------
+#EXTENSION(NoGlobalDataExports,'RA.2011.03.15 - Suppress Global Data Exports (CLARION,CW20,ABC)'),APPLICATION
+#ATSTART
+  #DECLARE(%HoldGlobalExternal)
+#ENDAT
+#AT(%BeginningExports)
+  #SET(%HoldGlobalExternal,%GlobalExternal)
+  #SET(%GlobalExternal,%True)
+#ENDAT
+#AT(%DLLExportList)
+  #SET(%GlobalExternal,%HoldGlobalExternal)
+#ENDAT
+
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------

@@ -1,0 +1,56 @@
+ <Configuration Version="1.00">
+  <Settings PATHTOSAVECLASS="H:\Dev\Source\Classes" RECENTOPEN="C:\Users\John\AppData\Roaming\SoftVelocity\Clarion\9.0\RecentOpen.xml" DEFAULTSOLUTIONFOLDER="Classes" TEXTEDITOR="C:\Clarion9.1\bin\Clarion.exe" OPENTEXTEDITORAFTERCREATE="1" USEADVANCEDMODE="0">
+  </Settings>
+ </Configuration>
+ <Solutions Version="1.00">
+  <SolutionList SQLSOLUTIONNAME="POSitive" SLQSOLUTIONFILE="H:\Dev\AP6\POSitive.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="1">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="PSM" SLQSOLUTIONFILE="H:\Dev\AP6\PSM\PSM.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="POSitiveGold" SLQSOLUTIONFILE="H:\Dev\AP6Gold\POSitiveGold.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="UPSDemo" SLQSOLUTIONFILE="H:\Dev\C9Apps\UPSDemo\UPSDemo.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="ReportControl_c6" SLQSOLUTIONFILE="C:\Clarion6\3rdParty\Examples\Noyantis\ReportControl\ReportControl_c6.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="GCImporter" SLQSOLUTIONFILE="H:\Dev\AP6\GCImporter\GCImporter.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="TPGrid" SLQSOLUTIONFILE="H:\Dev\C9Apps\GridXaml\TPGrid.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="uxServer" SLQSOLUTIONFILE="H:\Dev\C9Apps\uxServer\uxServer.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="CommandBars_c6" SLQSOLUTIONFILE="C:\Clarion6\3rdParty\Examples\Noyantis\CommandBars\CommandBars_c6.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="VideoCapture" SLQSOLUTIONFILE="H:\Dev\C8Apps\VideoCapture\VideoCapture.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="PCAP" SLQSOLUTIONFILE="H:\Dev\AP6\PCAP\PCAP.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="netdemo" SLQSOLUTIONFILE="C:\Users\Public\Documents\SoftVelocity\Clarion9.1\Accessory\Capesoft\NetTalk\Demo\netdemo.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="invoice" SLQSOLUTIONFILE="H:\Dev\C9Apps\Invoice\invoice.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="DockingPane_c6" SLQSOLUTIONFILE="C:\Clarion6\3rdParty\Examples\Noyantis\DockingPane\DockingPane_c6.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="DP_Leg" SLQSOLUTIONFILE="H:\Dev\C9Apps\DockingPane - Legacy\DP_Leg.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="PlaceHolderDemo" SLQSOLUTIONFILE="H:\Dev\C9Apps\PlaceHolderDemo\PlaceHolderDemo.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="W2PDFtest" SLQSOLUTIONFILE="H:\Dev\C9Apps\Debenu\W2PDFtest.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="rams" SLQSOLUTIONFILE="H:\Dev\AP6\RAMS\rams.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="UltimateTXA" SLQSOLUTIONFILE="H:\Dev\C9Apps\UltimateTXA\UltimateTXA.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+  <SolutionList SQLSOLUTIONNAME="ListEmbeds" SLQSOLUTIONFILE="C:\Dev\Utilities\CTest\ListEmbeds\ListEmbeds.sln" SLQCLASSFOLDERNAME="Classes" SQLMARK="0">
+  </SolutionList>
+ </Solutions>
+ <Classes Version="1.00">
+ </Classes>
+ <ClassSkeletons Version="1.00">
+  <ClassSkeletons MQS_CLASSDESCRIPTION="Basic Class Template" MQS_CLASSINC="BasicClass.inc">
+  </ClassSkeletons>
+  <ClassSkeletons MQS_CLASSDESCRIPTION="Basic Class Template With Queues" MQS_CLASSINC="BasicClassWithQueue.inc">
+  </ClassSkeletons>
+  <ClassSkeletons MQS_CLASSDESCRIPTION="Activex Class Template" MQS_CLASSINC="H:\Dev\ClarionClassCreator\ActivexClass.inc">
+  </ClassSkeletons>
+ </ClassSkeletons>
