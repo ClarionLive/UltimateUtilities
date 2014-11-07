@@ -1,0 +1,296 @@
+#EXTENSION(UltimateNotifyGlobal, 'UltimateNotify (Global Extension)'),APPLICATION(UltimateNotifyLocalExtension(UltimateNotify))
+#PREPARE
+  #INSERT(%CalcFamily, %UltimateNotifyFamily)
+#ENDPREPARE
+#BOXED('Information')
+#INSERT(%CopyrightInfo)
+#ENDBOXED
+#DISPLAY
+#SHEET,HSCROLL
+#TAB('General')
+  #DISPLAY
+  #DISPLAY
+  #PROMPT('Global Class:',@S40),%UltimateNotifyManagerClass,AT(90,,95,10),REQ,DEFAULT('NotifyManager')
+  #PROMPT('Multi DLL',CHECK),%UltimateNotifyMultiDLL,AT(90),DEFAULT(0)
+  #ENABLE(%UltimateNotifyMultiDLL=1),ClEAR
+    #PROMPT('Declaration:',DROP('Declared in another App[0]|Declared in this app[1]')),%UltimateNotifyMultiDLLData,DEFAULT(0),AT(90,,95,10)
+  #ENDENABLE
+  #INSERT(%TabCopyright)
+#ENDTAB  
+#INSERT(%TabInstructions)
+#INSERT(%TabContributors)
+#INSERT(%TabClarionVer)
+#ENDSHEET
+#DISPLAY
+#DISPLAY
+#PROMPT('Disable template',CHECK),%UltimateNotifyAppDisable,AT(10),DEFAULT(0)
+
+#ATSTART          
+  #DECLARE(%ThisApplicationExtension)
+  #DECLARE(%UltimateNotifyDataExternal)
+  #IF(%UltimateNotifyMultiDLL=1 AND %UltimateNotifyMultiDLLData=0)
+    #SET(%UltimateNotifyDataExternal,',EXTERNAL,DLL(dll_mode)')
+  #ENDIF
+#ENDAT
+
+#AT(%AfterGlobalIncludes),WHERE(~%UltimateNotifyAppDisable)
+  INCLUDE('UltimateNotify.inc'),ONCE
+  INCLUDE('UltimateNotifyManager.inc'),ONCE
+  INCLUDE('UltimateString.inc'),ONCE
+#ENDAT
+
+#AT(%CustomGlobalDeclarations),WHERE(~%UltimateNotifyAppDisable)
+  #INSERT(%CalcFamily, %UltimateNotifyFamily)
+  #IF(%UltimateNotifyFamily='LEGACY')
+  #PROJECT('UltimateNotifyManager.clw')
+  #ENDIF
+#ENDAT
+
+#AT(%GlobalData),WHERE(~%UltimateNotifyAppDisable)
+UltimateNotify_TplVersion    CSTRING('v%UltimateNotifyTPLVersion')%UltimateNotifyDataExternal
+%UltimateNotifyManagerClass         CLASS(UltimateNotifyManager)%UltimateNotifyDataExternal
+                     END
+#ENDAT
+
+#AT(%DLLExportList),WHERE(%UltimateNotifyMultiDLL=1 AND %UltimateNotifyMultiDLLData=1 AND ~%UltimateNotifyAppDisable)
+  $UltimateNotify_TplVersion     @?
+  $%UltimateNotifyManagerClass   @?
+ 
+#ENDAT
+
+#!-------------------------------------------------
+#EXTENSION(UltimateNotifyLocalExtension,'UltimateNotify Local Extension Template'),PROCEDURE
+#BOXED  ('')
+#DISPLAY('UltimateNotify Local Extension Template')
+#DISPLAY('This Template adds Notify monitoring')
+#DISPLAY('   to your Procedure.')
+#DISPLAY
+#PROMPT('Local Handler Class',@S60),%ClassName,DEFAULT('NotifyHandler')
+#PROMPT('LocalString Class:',@S40),%StringClassName,REQ,DEFAULT('us')
+#PROMPT('Use StringTheory',CHECK),%UseStringTheory
+#PROMPT('Enable Notify Tracking',CHECK),%EnableNotifyTracking
+#BOXED,SECTION
+    #PROMPT('Procedure Type',OPTION),%NotifyProcedureType,DEFAULT('Independent'),AT(,,,22)
+    #PROMPT('Independent',RADIO),AT(20,10)
+    #PROMPT('Parent',RADIO),AT(90,10)
+    #PROMPT('Child',RADIO),AT(150,10)
+#ENDBOXED
+#DISPLAY
+#BOXED('Parent Thread Parameter'),WHERE(%NotifyProcedureType = 'Child')
+#PROMPT(' Passed Parameter',@S30),%ParentThreadVariable
+#ENDBOXED
+#DISPLAY('Field to Receive')
+#PROMPT('   Notify Parameter',FIELD),%FieldToReceiveParameter
+#DISPLAY
+#PROMPT('Notify ID to Monitor',@S30),%NotifyIDToMonitor,DEFAULT(1)
+#DISPLAY
+#BUTTON('Additional Notify IDs'),MULTI(%NotifyIDs,%NotifyID),AT(10,,180)
+#PROMPT('Notify ID',@S30),%NotifyID
+#ENDBUTTON
+#DISPLAY
+#BUTTON('Notification Groups (optional)'),MULTI(%NotifyGroupNames,%NotifyGroupName),AT(10,,180)
+#PROMPT('Group Name',@S60),%NotifyGroupName
+#ENDBUTTON
+#DISPLAY
+#PROMPT('Disable Template',CHECK),%DisableEventNotifyTemplate,AT(10,,180)
+#ENDBOXED 
+!-------------------        
+#AT(%DataSection),PRIORITY(2000)
+#IF(%DisableEventNotifyTemplate = 0)
+ #IF(%EnableNotifyTracking)
+%ClassName          CLASS(UltimateNotify)
+HandleNotify            PROCEDURE(UNSIGNED NotifyCode, SIGNED NotifyThread,LONG NotifyParameter),DERIVED
+                    END
+ #ENDIF
+#ENDIF  
+#ENDAT
+
+#AT(%ProcedureSetup),PRIORITY(1)
+#IF(%DisableEventNotifyTemplate = 0)
+ #IF(%EnableNotifyTracking)
+  #IF(%NotifyProcedureType = 'Child')
+  %UltimateNotifyManagerClass.AddProcedure('%Procedure',%ParentThreadVariable)
+  #ELSE
+  %UltimateNotifyManagerClass.AddProcedure('%Procedure')
+  #ENDIF
+  #FOR(%NotifyGroupNames)
+  %UltimateNotifyManagerClass.AddNotifyGroup('%NotifyGroupName','%Procedure',THREAD())
+  #ENDFOR
+  #IF(%DisableEventNotifyTemplate = 0)
+  %ClassName.AddNotifyCode(%NotifyIDToMonitor)
+  #FOR(%NotifyIDs)
+  %ClassName.AddNotifyCode(%NotifyID)
+  #ENDFOR
+  #ENDIF
+ #ENDIF  
+#ENDIF 
+#ENDAT
+
+#AT(%AfterWindowOpening),PRIORITY(1)
+#IF(%DisableEventNotifyTemplate = 0)
+ #IF(%EnableNotifyTracking)
+  %ClassName.InitWindow()
+ #ENDIF
+#ENDIF 
+#ENDAT
+
+#AT(%BeforeWindowClosing),PRIORITY(1)
+#IF(%DisableEventNotifyTemplate = 0)
+ #IF(%EnableNotifyTracking = 1)
+  #IF(%NotifyProcedureType = 'Child')
+  %UltimateNotifyManagerClass.DeleteProcedure('%Procedure',%ParentThreadVariable)
+  #ELSE
+  %UltimateNotifyManagerClass.DeleteProcedure('%Procedure')
+  #ENDIF
+ #ENDIF
+#ENDIF 
+#ENDAT
+
+#AT(%AcceptLoopBeforeEventHandling),PRIORITY(100)
+#IF(%DisableEventNotifyTemplate = 0)
+ #IF(%EnableNotifyTracking = 1)
+   #! %ClassName.OnNotify()
+ #ENDIF   
+#ENDIF 
+#ENDAT
+
+#AT(%LocalProcedures),PRIORITY(8499)
+#IF(%DisableEventNotifyTemplate = 0)
+ #IF(%EnableNotifyTracking = 1)
+%ClassName.HandleNotify       PROCEDURE(UNSIGNED NotifyCode, SIGNED NotifyThread,LONG NotifyParameter)
+#IF(%UseStringTheory)
+%StringClassName    StringTheory
+#ELSE
+%StringClassName    UltimateString
+#ENDIF
+#EMBED(%NotifyHandlerDataEmbed,'UltimateNotify Handler Data Embed')
+    CODE    
+    #IF(%FieldToReceiveParameter <> '')
+    %FieldToReceiveParameter = %UltimateNotifyManagerClass.GetNotifyParm(NotifyParameter)
+    #ELSE
+      #IF(%UseStringTheory)
+    %StringClassName.SetValue(%UltimateNotifyManagerClass.GetNotifyParm(NotifyParameter))
+    ! Use %StringClassName.GetValue() to retrieve the value of your passed parameter
+      #ELSE
+    !%StringClassName.Append(%UltimateNotifyManagerClass.GetNotifyParm(NotifyParameter))
+    ! Use %StringClassName.Get() to retrieve the value of your passed parameter
+      #ENDIF
+    #ENDIF
+#EMBED(%NotifyHandlerCodeEmbed,'UltimateNotify Handler Code Embed')
+ #ENDIF
+#ENDIF  
+#ENDAT
+#!
+#GROUP(%InsertedStart)
+#!
+#GROUP(%InsertedEnd)
+#!   
+#GROUP(%TabInstructions) 
+#TAB('Instructions')
+  #DISPLAY('UltimateNotify'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY         
+#ENDTAB
+#!
+#GROUP(%TabCopyright)
+#BOXED,SECTION,AT(0,23,240,42)
+  #DISPLAY('UltimateNotify'),AT(10,0),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('Version ' & %UltimateNotifyTPLVersion),AT(10,10),PROP(PROP:FontStyle,700),PROP(PROP:FontName,'Tahoma')
+  #DISPLAY('http://www.clarionlive.com'),AT(10,30)
+  #DISPLAY
+#ENDBOXED
+#!
+#!
+#GROUP(%TabContributors)
+#TAB('Contributors')
+  #DISPLAY
+  #DISPLAY('Arnold Young + John Hickey = Clarion Live')
+  #DISPLAY('http://www.clarionlive.com')
+  #DISPLAY
+  #DISPLAY('Andy Wilton - Noyantis Software')
+  #DISPLAY('http://www.noyantis.com')   
+  #DISPLAY
+  #DISPLAY('Mike Hanson - BoxSoft')
+  #DISPLAY('http://www.boxsoft.net')
+  #DISPLAY
+  #DISPLAY('Bruce Johnson - CapeSoft')
+  #DISPLAY('http://www.capesoft.com')
+  #DISPLAY
+  #DISPLAY('Mark Goldberg')
+  #DISPLAY('Contributing Code')
+  #DISPLAY
+#ENDTAB
+#!
+#!
+#GROUP(%TabClarionVer)
+#TAB('Template Set')
+  #DISPLAY
+  #DISPLAY('Current Template Set being used by this app.')
+  #DISPLAY
+  #DISPLAY('This will be set automatically for you once a compile has')
+  #DISPLAY('been performed.')
+  #DISPLAY
+  #ENABLE(%False)
+    #PROMPT('Template Set:',@S10),%UltimateNotifyFamily,Default(''),AT(90,,95,10)
+  #ENDENABLE
+  #DISPLAY
+#ENDTAB
+#!
+#!
+#GROUP(%TabOOP)
+#TAB('OOP'),WHERE(%False)
+  #BOXED('Default prompts'),AT(0,0),WHERE(%False),HIDE
+  #INSERT(%OOPHiddenPrompts(ABC))
+  #ENDBOXED
+#ENDTAB
+#!
+#!
+#GROUP(%TabClassesABC, %UltimateNotifyFamily)
+#TAB('&Classes'),WHERE(%UltimateNotifyFamily='ABC')
+  #WITH(%ClassItem, 'Default')
+    #INSERT(%ClassPrompts(ABC))
+  #ENDWITH
+#ENDTAB
+#!
+#!
+#GROUP(%TabClassesLEGACY, %UltimateNotifyFamily)
+#TAB('&Classes'),WHERE(%UltimateNotifyFamily='LEGACY')
+  #BOXED('')
+    #PROMPT('Object:',@S40),%ObjectID,AT(65,,115,10)
+  #ENDBOXED
+#ENDTAB
+#!
+#!
+#GROUP(%WndInit)
+#INSERT(%InsertedStart)
+%UltimateNotifyObj.Init()
+#INSERT(%InsertedEnd)
+#!
+#!
+#GROUP(%Wnd)
+#INSERT(%InsertedStart)
+  %UltimateNotifyObj.Kill()
+#INSERT(%InsertedEnd)
+#!
+#!
+#GROUP(%CalcFamily, * %UltimateNotifyFamily)
+#IF(VarExists(%AppTemplateFamily))
+  #IF(%AppTemplateFamily='CLARION')
+    #SET(%UltimateNotifyFamily,'LEGACY')
+  #ELSE
+    #SET(%UltimateNotifyFamily,'ABC')
+  #ENDIF
+#ELSIF(VarExists(%cwtemplateversion))
+  #IF(%cwtemplateversion = 'v5.5')
+    #IF(VarExists(%ABCVersion))
+      #SET(%UltimateNotifyFamily,'ABC')
+    #ELSE
+      #SET(%UltimateNotifyFamily,'LEGACY')
+    #ENDIF
+  #ELSE
+    #IF(%cwtemplateversion = 'v2.003')
+      #SET(%UltimateNotifyFamily,'LEGACY')
+    #ELSE
+      #SET(%UltimateNotifyFamily,'ABC')
+    #ENDIF
+  #ENDIF
+#ENDIF
