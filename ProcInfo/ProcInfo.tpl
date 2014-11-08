@@ -6,7 +6,7 @@
 #! Made available for use and distribution for Clarion Live
 #!=====================================================================
 #SYSTEM
-#Equate(%ProcInfoVersion,'1.00')
+#EQUATE(%ProcInfoVersion,'1.00')
 #!=====================================================================
 #!======= GLOBAL EXTENSION Template ===================================
 #!=====================================================================
@@ -23,122 +23,105 @@
     #DISPLAY
   #ENDTAB
  #ENDSHEET 
-
 #!=====================================================================
 #!======= EXTENSION Template for procedures ===========================
 #!=====================================================================
-#! 
-#EXTENSION(ProcInfoProcedureExt,'Procedure Info Extensions for this Procedure'),PROCEDURE,REQ(ProcInfoGlobal(ProcInfo))
-  #!------ See if HTM help templates is active on this procedure --------------  
-    #!------ Settings for Non Source type procedure -------------------
-    #SHEET 
-    #TAB('General'),WHERE (%ProcedureTemplate <> 'Source')
+#EXTENSION(ProcInfoProcedureExt,'Procedure Info Extensions for this Procedure'),PROCEDURE,REQ(ProcInfoGlobal(ProcInfo)),DESCRIPTION('Procedure Info Extensions for this Procedure')
+#!------ See if HTM help templates is active on this procedure --------------  
+#!------ Settings for Non Source type procedure -------------------
+#SHEET 
+  #TAB('General'),WHERE (%ProcedureTemplate <> 'Source')
+    #INSERT(%VersionHeader)
+    #DISPLAY('ProcInfo General procedure Template'),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,0008000H)
+    #BOXED(''),SECTION,PROP(Prop:FontName,'Arial'),WHERE(%GloEnableAppInfo)
+      #PROMPT('Disable App Info alert key for this procedure.',Check),%DisableAppInfo,AT(10,5),PROP(Prop:FontName,'Arial')
+    #ENDBOXED 
+    #DISPLAY  
+  #ENDTAB
+  #!------- Settings for Source type procedure ----------------------
+  #TAB('General'),WHERE (%ProcedureTemplate = 'Source')
+    #BOXED  
       #INSERT(%VersionHeader)
-      #DISPLAY('ProcInfo General procedure Template'),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,0008000H)
-        #BOXED(''),SECTION,PROP(Prop:FontName,'Arial'),WHERE(%GloEnableAppInfo)
-          #PROMPT('Disable App Info alert key for this procedure.',Check),%DisableAppInfo,AT(10,5),PROP(Prop:FontName,'Arial')
-        #ENDBOXED 
-       #DISPLAY  
-    #ENDTAB
-    #!------- Settings for Source type procedure ----------------------
-    #TAB('General'),WHERE (%ProcedureTemplate = 'Source')
-      #BOXED  
-        #INSERT(%VersionHeader)
-        #DISPLAY('The ProcInfo template is not available in this'),PROP(Prop:FontStyle,800),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,00000FFH)
-        #DISPLAY('procedure.'),PROP(Prop:FontStyle,800),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,00000FFH)
-      #ENDBOXED  
-    #ENDTAB
-  #ENDSHEET
+      #DISPLAY('The ProcInfo template is not available in this'),PROP(Prop:FontStyle,800),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,00000FFH)
+      #DISPLAY('procedure.'),PROP(Prop:FontStyle,800),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,00000FFH)
+    #ENDBOXED  
+  #ENDTAB
+#ENDSHEET
 #!=====================================================================
-  
 #!------- App Info Alert ----------------------------------------------
-#COMMENT(84)
-#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(%GloEnableAppInfo=1 AND %DisableAppInfo = 0 ),PRIORITY(9001)
-#DECLARE(%cwHHFound,LONG)  
-  #SET(%cwHHFound,0)
-  #FOR(%ActiveTemplate)
-    #FOR(%ActiveTemplateInstance)
-      #IF(%ActiveTemplate='cwHHProc(ABC)')
-        #SET(%cwHHFound,1)
-        #BREAK
-      #ENDIF
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(%GloEnableAppInfo=1 AND %DisableAppInfo = 0 ),PRIORITY(9001),DESCRIPTION(%ActiveTemplateInstanceDescription)
+    #IF(%GlobalAlertKey)
+0{PROP:Alrt,255} = %GlobalAlertKey  #<!%ActiveTemplateInstanceDescription
+    #ENDIF
+    #DECLARE(%cwHHFound,LONG)  
+    #SET(%cwHHFound,%False)
+    #FOR(%ActiveTemplate)
+      #FOR(%ActiveTemplateInstance)
+        #IF(%ActiveTemplate='cwHHProc(ABC)')
+          #SET(%cwHHFound,%True)
+          #BREAK
+        #ENDIF
+      #ENDFOR
     #ENDFOR
-  #ENDFOR
-  
-  #IF(%GlobalAlertKey)
-    ALERT(%GlobalAlertKey)                                      #<!ProcInfo Template 
-  #ENDIF
 #ENDAT
-#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(%GloEnableAppInfo=1 AND %DisableAppInfo = 0 AND %cwHHFound = 1 ),PRIORITY(9800)
- 
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(%GloEnableAppInfo=1 AND %DisableAppInfo = 0 AND %cwHHFound = 1 ),PRIORITY(9800),DESCRIPTION(%ActiveTemplateInstanceDescription)
+!%ActiveTemplateInstanceDescription (BEGIN)
+IF oHH.GetTopic() = ''
     #IF( %cwHHappendHTM )
-     IF CLIP(oHH.GetTopic()) =''                                  #<!ProcInfo Template mod 
-       oHH.SetTopic('%Procedure.htm')                             #<!Default Help topic to procedure name.htm if none is set !ProcInfo Template mod
-     END        
+  oHH.SetTopic('%Procedure.htm') #<!Default Help topic to procedure name.htm if none is set
     #ELSE 
-     IF CLIP(oHH.GetTopic()) =''                                  #<!ProcInfo Template mod 
-       oHH.SetTopic('%Procedure')                                #<!Default Help topic to procedure name if none is set !ProcInfo Template mod   
-     END  
+  oHH.SetTopic('%Procedure')     #<!Default Help topic to procedure name if none is set
     #ENDIF   
-                                                       #<!ProcInfo Template mod
-    
+END
+!%ActiveTemplateInstanceDescription (END)
 #ENDAT
-#AT(%WindowManagerMethodCodeSection,'TakeWindowEvent','(),BYTE'),WHERE(%GloEnableAppInfo=1 AND %DisableAppInfo = 0),PRIORITY(4000)
-  #IF(%GlobalAlertKey)
-  CASE EVENT()                                                #<!ProcInfo Template  
-  OF Event:AlertKey                                           #<!ProcInfo Template  
-    IF KEYCODE() = %GlobalAlertKey                            #<!ProcInfo Template  
-       #IF(%cwHHFound)
-      CASE Message('Proc Name<9>: %Procedure'|                   #<!ProcInfo Template
-          &'|Proc Template<9>: %ProcedureTemplate'|             #<!ProcInfo Template
-          &'|Proc Description<9>: %ProcedureDescription'|       #<!ProcInfo Template 
-          &'|Proc Changed on<9>: '& FORMAT('%ProcedureDateChanged',@D17B) &' '& FORMAT('%ProcedureTimeChanged',@T04B)|   #<!ProcInfo Template 
-          &'|HelpTopic   <9>: '& oHH.GetTopic()|                #<!ProcInfo Template
-          &'|App Name    <9>: %Application'|                    #<!ProcInfo Template
-          &'|Exe Path    <9>: '& COMMAND(0)|                    #<!ProcInfo Template
-          ,'Procedure information',ICON:Asterisk|               #<!ProcInfo Template  
-          ,'&Ok|&Copy All|Copy &Help',1,2)                      #<!ProcInfo Template
-      OF 1                                                       #<!ProcInfo Template  
-      OF 2                                                       #<!ProcInfo Template  
-       SETCLIPBOARD('Proc Name: %Procedure'|                    #<!ProcInfo Template  
-           &'<13,10>HelpTopic: '& CLIP(oHH.GetTopic())|
-           &'<13,10>Proc Template: %ProcedureTemplate'|         
-           &'<13,10>Proc Description: %ProcedureDescription'|     
-           &'<13,10>Proc Changed on: '& FORMAT('%ProcedureDateChanged',@D17B) &' '& FORMAT('%ProcedureTimeChanged',@T04B)|             
-           &'<13,10>App Name: %Application'|                    #<!ProcInfo Template
-           &'<13,10>Exe Path: '& COMMAND(0))                    #<!ProcInfo Template
-      OF 3                                                       #<!ProcInfo Template
-       SETCLIPBOARD(CLIP(oHH.GetTopic()))
-      END                                                        #<!ProcInfo Template  
-       #ELSE                            
-      CASE Message('Proc Name<9>: %Procedure'|                   #<!ProcInfo Template
-         &'|Proc Template<9>: %ProcedureTemplate'|              #<!ProcInfo Template
-          &'|Proc Description<9>: %ProcedureDescription'|       #<!ProcInfo Template 
-          &'|Proc Changed on<9>: '& FORMAT('%ProcedureDateChanged',@D17B) &' '& FORMAT('%ProcedureTimeChanged',@T04B)|   #<!ProcInfo Template  
-          &'|App Name    <9>: %Application'|                    #<!ProcInfo Template
-          &'|Exe Path    <9>: '& COMMAND(0)|                    #<!ProcInfo Template
-          ,'Procedure information',ICON:Asterisk|               #<!ProcInfo Template
-          ,'&Ok|&Copy All',1,2)                                 #<!ProcInfo Template
-      OF 1                                                       #<!ProcInfo Template
-      OF 2                                                       #<!ProcInfo Template
-       SETCLIPBOARD('Curr Process: %Procedure'|                 #<!ProcInfo Template
-           &'<13,10>Proc Template: %ProcedureTemplate'|         
-           &'<13,10>Proc Description: %ProcedureDescription'|     
-           &'<13,10>Proc Changed on: '& FORMAT('%ProcedureDateChanged',@D17B) &' '& FORMAT('%ProcedureTimeChanged',@T04B)| 
-           &'<13,10>App Name: %Application'|                    #<!ProcInfo Template
-           &'<13,10>Exe Path: '& COMMAND(0))                    #<!ProcInfo Template
-      END                                                        #<!ProcInfo Template
-       #ENDIF                                             
-    END !IF                                                   #<!ProcInfo Template 
-  END !CASE OF                                                #<!ProcInfo Template 
-  #ENDIF
-#ENDAT  
+#AT(%WindowManagerMethodCodeSection,'TakeWindowEvent','(),BYTE'),WHERE(%GloEnableAppInfo=1 AND %DisableAppInfo = 0),PRIORITY(4000),DESCRIPTION(%ActiveTemplateInstanceDescription)
+      #IF(%GlobalAlertKey)
+  !%ActiveTemplateInstanceDescription (BEGIN)
+  CASE EVENT()
+  OF EVENT:AlertKey
+    IF KEYCODE() = %GlobalAlertKey
+      CASE MESSAGE('Proc Name<9>: %Procedure' |
+          &'|Proc Template<9>: %ProcedureTemplate' |
+          &'|Proc Description<9>: %ProcedureDescription' |
+          &'|Proc Changed on<9>: %(%ProcDateTime())' |
+                #IF(%cwHHFound)
+          &'|HelpTopic   <9>: '& oHH.GetTopic() |
+                #ENDIF
+          &'|App Name    <9>: %Application' |
+          &'|Exe Path    <9>: '& COMMAND(0) |
+          ,'Procedure information',ICON:Asterisk |
+                #IF(%cwHHFound)
+          ,'&OK|&Copy All|Copy &Help',, MSGMODE:CANCOPY)
+                #ELSE
+          ,'&OK|&Copy All',, MSGMODE:CANCOPY)
+                #ENDIF
+      OF 2
+        SETCLIPBOARD('Proc Name: %Procedure' |
+                #IF(%cwHHFound)
+            &'<13,10>HelpTopic: '& CLIP(oHH.GetTopic()) |
+                #ENDIF
+            &'<13,10>Proc Template: %ProcedureTemplate' |
+            &'<13,10>Proc Description: %ProcedureDescription' |
+            &'<13,10>Proc Changed on: %(%ProcDateTime())' |
+            &'<13,10>App Name: %Application' |
+            &'<13,10>Exe Path: '& COMMAND(0))
+                #IF(%cwHHFound)
+      OF 3
+        SETCLIPBOARD(CLIP(oHH.GetTopic()))
+                #ENDIF
+      END
+    END
+  END
+  !%ActiveTemplateInstanceDescription (END)
+      #ENDIF
+#ENDAT
 #!---------------------------------------------------------------------   
 #GROUP(%VersionHeader)
-    #DISPLAY('Clarion Live'),AT(10),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,0FF0000H)
-    #DISPLAY('Procedure Info Template and Help'),AT(10),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial')
-    #DISPLAY('Version ' & %ProcInfoVersion),AT(10),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial')
-
+  #DISPLAY('Clarion Live'),AT(10),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial'),PROP(Prop:FontColor,0FF0000H)
+  #DISPLAY('Procedure Info Template and Help'),AT(10),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial')
+  #DISPLAY('Version ' & %ProcInfoVersion),AT(10),PROP(Prop:FontStyle,700),PROP(Prop:FontName,'Arial')
 #!--------------------------------------------------------------------- 
-  
-
+#GROUP(%ProcDateTime)
+#RETURN(FORMAT(%ProcedureDateChanged, @D17B) &' '& FORMAT(%ProcedureTimeChanged, @T04B))
+#!--------------------------------------------------------------------- 
