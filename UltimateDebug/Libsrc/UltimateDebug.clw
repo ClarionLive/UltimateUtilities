@@ -1,16 +1,11 @@
                               MEMBER()
-  omit('***',_c55_)
-_ABCDllMode_                  EQUATE(0)
-_ABCLinkMode_                 EQUATE(1)
-  ***
-!
-!--------------------------
-!ClarionLive Skeleton Class
-!--------------------------
 !==============================================================================
 !If all fields begin with the same prefix, then you can have that auto-stripped
 !by uncommenting the following line.
-!E_StripPrefix                 EQUATE(1)
+E_StripPrefix                 EQUATE(1)
+!==============================================================================
+!This controls the max number of characters used to auto-size column width.  You can still resize width manually.
+E_EnoughCharacters            EQUATE(25)
 !==============================================================================
 WidthMultiplier:Narrow        EQUATE(5)  !normal columns (numbers, lowercase, etc.)
 WidthMultiplier:Wide          EQUATE(7)  !uppercase columns
@@ -37,6 +32,7 @@ DebugQueueCallingItself       BOOL(FALSE)
                                   debugerGetFieldName(SIGNED FEQ            ),LONG,RAW,NAME('Cla$FIELDNAME')
                                   !END-OMIT('** C55+ **',_C55_)
                                 END
+                                !INCLUDE('STDebug.inc')
                               END
 
 !OMIT('_ifdef_',EVENT:APP=08000h)
@@ -385,32 +381,31 @@ AssignValue2                  ROUTINE
 UltimateDebug.DebugQueue      PROCEDURE(*QUEUE pQueue,<STRING pMsg>,<BYTE pNoTouch>)
                               MAP
 LoadFieldQ                      PROCEDURE
+CalculateColumnWidths           PROCEDURE
                               END
 !--------------------------------------
 SavePointer                     LONG,AUTO
 NumFields                       SHORT,AUTO
                                 COMPILE('***---***', E_StripPrefix)
-StripPrefixLength               BYTE,AUTO
+StripPrefixLength               BYTE(0)
                                 ***---***
-StripedList                     UltimateVLB
-StripedList_ColumnClass         CLASS(UltVLB:ColumnClass),TYPE
-Init                              PROCEDURE(LONG FieldNo,*? FieldRef,STRING Header,STRING Picture,SHORT Width,STRING Justification)
+StripedList                     CLASS(UltimateVLB)
+AddColumn                         PROCEDURE(*? FieldRef,STRING Header,STRING Picture,SHORT Width,STRING Justification),*UltVLB:ColumnClass,PROC
                                 END
 DummyColumn                     STRING(1)
-ColumnObj                       &StripedList_ColumnClass
 FieldQ                          QUEUE
-Header                            CSTRING(100)
-Width                             LONG
-IsNumeric                         BOOL
-IsGroup                           BOOL
 ColumnObject                      &UltVLB:ColumnClass
+Width                             LONG
+IsDataUpper                       BOOL
+IsDataNumeric                     BOOL
+IsGroup                           BOOL
+HeaderLength                      LONG
+DataLength                        LONG
+Header                            CSTRING(100)
                                 END
 MsgLineQ                        QUEUE
 Text                              STRING(1000)
                                 END    
-!NumberColumn                  CLASS(UltVLB:ColumnClass)
-!Init                            PROCEDURE(LONG FieldNo,*? FieldRef,STRING Header,STRING Picture),*UltVLB:ColumnClass
-!                              END
 !--------------------------------------
 Window                          WINDOW('Debug Queue'),SYSTEM,AT(,,676,416),CENTER,FONT('Tahoma', 8),GRAY,DOUBLE
                                   LIST, AT(4,4,668,356), USE(?DebugList), HVSCROLL
@@ -435,6 +430,7 @@ Window                          WINDOW('Debug Queue'),SYSTEM,AT(,,676,416),CENTE
       COMPILE('***---***', E_StripPrefix)
       DO CheckStripPrefix
       ***---***
+      CalculateColumnWidths
       !--- Prepare window
       OPEN(Window)
       0{PROP:Text} = 0{PROP:Text} &' ('& NumFields &' Fields, '& RECORDS(pQueue) &' Records)'
@@ -462,23 +458,9 @@ Window                          WINDOW('Debug Queue'),SYSTEM,AT(,,676,416),CENTE
       END
     END
   END
-  DO FreeFieldQ
+  FREE(FieldQ)
   !ENDCOMPILE
   !ST::Debug('ST::DebugQueue/OUT')
-  RETURN
-!======================================
-FreeFieldQ                    ROUTINE
-!--------------------------------------
-  DATA
-X   LONG
-  CODE
-!--------------------------------------
-  LOOP X = 1 TO RECORDS(FieldQ)
-    GET(FieldQ, X)
-    DISPOSE(FieldQ.ColumnObject)
-  END
-  FREE(FieldQ)
-  DISPOSE(ColumnObj)
 
 !======================================
 FindLastField                 ROUTINE
@@ -488,6 +470,7 @@ FindLastField                 ROUTINE
       AND   WHO(pQueue, NumFields) = ''
     NumFields -= 1
   END
+  ASSERT(NumFields > 0)
 
 !**************************************
   COMPILE('***---***', E_StripPrefix)
@@ -495,7 +478,7 @@ FindLastField                 ROUTINE
 CheckStripPrefix              ROUTINE
 !--------------------------------------
   DATA
-FieldNo SHORT,AUTO
+FieldNo LONG,AUTO
 PrefixFound CSTRING(20)
 !--------------------------------------
   CODE
@@ -503,7 +486,7 @@ PrefixFound CSTRING(20)
     FieldQ.Header = WHO(pQueue, FieldNo)
     
     StripPrefixLength = INSTRING(':', FieldQ.Header)
-    IF StripPrefixLength
+    IF StripPrefixLength > 0
       IF FieldNo = 1
         PrefixFound = FieldQ.Header[1:StripPrefixLength]
       ELSIF FieldQ.Header[1:StripPrefixLength] <> PrefixFound
@@ -515,15 +498,22 @@ PrefixFound CSTRING(20)
       BREAK
     END
   END
-  EXIT
+  IF StripPrefixLength > 0
+    LOOP FieldNo = 1 TO NumFields
+      GET(FieldQ, FieldNo)
+      FieldQ.Header        = SUB(FieldQ.Header, StripPrefixLength+1, LEN(CLIP(FieldQ.Header))-StripPrefixLength)
+      FieldQ.HeaderLength -= StripPrefixLength
+      PUT(FieldQ)
+    END
+  END
   ***---***
+
 !======================================
 FormatFieldList               ROUTINE
 !--------------------------------------
   DATA
-FieldNo SHORT,AUTO
+FieldNo LONG,AUTO
 ColumnNo    SHORT(0)
-Picture CSTRING(5)
 !--------------------------------------
   CODE
   !?DebugList{PROP:From} = pQueue
@@ -533,60 +523,46 @@ Picture CSTRING(5)
       CYCLE
     END
     ColumnNo += 1
-    Picture = '@S'& FieldQ.Width
-    ?DebugList{PROPLIST:Header                    , ColumnNo} = FieldQ.Header
-    ?DebugList{PROPLIST:Picture                   , ColumnNo} = Picture
-!   ?DebugList{PROPLIST:Width                     , ColumnNo} = FieldQ.Width
-!   ?DebugList{PROPLIST:HeaderCenter              , ColumnNo} = True
-!   ?DebugList{PROPLIST:HeaderLeft                , ColumnNo} = True
-!   ?DebugList{PROPLIST:HeaderLeftOffset          , ColumnNo} = 1
-!   IF FieldQ.IsNumeric
-!     ?DebugList{PROPLIST:Right                 , ColumnNo} = True
-!     ?DebugList{PROPLIST:RightOffset           , ColumnNo} = 1
-!   ELSE
-!     ?DebugList{PROPLIST:Left                  , ColumnNo} = True
-!     ?DebugList{PROPLIST:LeftOffset            , ColumnNo} = 1
-!   END
-    ?DebugList{PROPLIST:FieldNo                   , ColumnNo} = FieldNo
-!   ?DebugList{PROPLIST:RightBorder               , ColumnNo} = 1
     ?DebugList{PROPLIST:RightBorder+PROPLIST:Group, ColumnNo} = 1
-!   ?DebugList{PROPLIST:Resize                    , ColumnNo} = 1
 
-    ColumnObj &= NEW StripedList_ColumnClass
-    ColumnObj.Init(FieldNo, WHAT(pQueue, FieldNo), FieldQ.Header, Picture, FieldQ.Width, CHOOSE(~FieldQ.IsNumeric, 'L', 'R'))
-    FieldQ.ColumnObject &= ColumnObj
+    FieldQ.ColumnObject &= StripedList.AddColumn( |
+        WHAT(pQueue, FieldNo), | 
+        FieldQ.Header, | 
+        '@S'& FieldQ.DataLength, | 
+        FieldQ.Width, | 
+        CHOOSE(~FieldQ.IsDataNumeric, UltVLB:Justify:Left, UltVLB:Justify:Right))
     PUT(FieldQ)
-    StripedList.AddColumn(FieldQ.ColumnObject)
   END
-  ColumnObj &= NEW StripedList_ColumnClass
-  ColumnObj.Init(NumFields+1, DummyColumn, '', '@S1', 1, 'L')
-  StripedList.AddColumn(ColumnObj)
+  StripedList.AddColumn(DummyColumn, '', '@S1', 1, UltVLB:Justify:Left)
+  !ST::DebugQueue(FieldQ, 'FormatFieldList')
 
-!**************************************
 !======================================
-StripedList_ColumnClass.Init    PROCEDURE(LONG FieldNo,*? FieldRef,STRING Header,STRING Picture,SHORT Width,STRING Justification)
+StripedList.AddColumn         PROCEDURE(*? FieldRef,STRING Header,STRING Picture,SHORT Width,STRING Justification)!,*UltVLB:ColumnClass
+!--------------------------------------
+ColumnObj                       &UltVLB:ColumnClass
+!--------------------------------------
   CODE
-  SELF.FieldNo       = FieldNo
-  SELF.FieldRef     &= FieldRef
-  SELF.Header        = Header
-  SELF.Picture       = Picture
-  SELF.Width         = Width
-  SELF.Justification = Justification
-  IF SELF.Justification = 'R'
-    SELF.HJustification = 'C'
-    SELF.HOffset        = 0
+  ColumnObj              &= NEW UltVLB:ColumnClass
+  ColumnObj.FieldRef     &= FieldRef
+  ColumnObj.Header        = Header
+  ColumnObj.Picture       = Picture
+  ColumnObj.Width         = Width
+  ColumnObj.Justification = Justification
+  IF ColumnObj.Justification = UltVLB:Justify:Right
+    ColumnObj.HJustification = UltVLB:Justify:Center
+    ColumnObj.HOffset        = 0
   END
+  SELF.AddColumn(ColumnObj, TRUE)  !TRUE tells it to DISPOSE for us.
+  RETURN ColumnObj
 
 !======================================
 LoadFieldQ                    PROCEDURE
 !--------------------------------------
-FieldNo                         SHORT,AUTO
+FieldNo                         LONG,AUTO
 FieldRef                        ANY
 RecNo                           LONG,AUTO
 SampleLength                    LONG,AUTO
-HeaderLength                    LONG,AUTO
-DataLength                      LONG,AUTO
-IsDataUpper                     BOOL,AUTO
+IsDataEmpty                     BOOL,AUTO
 !--------------------------------------
   CODE
   !ST::Debug('ST::DebugQueue/LoadFieldQ/IN: NumFields='& NumFields)
@@ -594,68 +570,72 @@ IsDataUpper                     BOOL,AUTO
     CLEAR(FieldQ)
     !ST::Debug('ST::DebugQueue/LoadFieldQ: FieldNo='& FieldNo)
     FieldQ.Header                  = LOWER(WHO(pQueue, FieldNo))
-    COMPILE('***---***', E_StripPrefix)
-    IF StripPrefixLength
-      HeaderLength                 = LEN(FieldQ.Header) - StripPrefixLength
-      FieldQ.Header                = SUB(FieldQ.Header, StripPrefixLength+1, HeaderLength)
-    ELSE
-      ***---***
-      HeaderLength                 = LEN(FieldQ.Header)
-      COMPILE('***---***', E_StripPrefix)
+    FieldQ.HeaderLength            = LEN(FieldQ.Header)
+    IF FieldQ.HeaderLength < 1
+      FieldQ.HeaderLength          = 1
     END
-    ***---***
-    IF HeaderLength < 1
-      HeaderLength                 = 1
-    END
-    COMPILE('***---***', _C60_)
     FieldRef                      &= WHAT(pQueue, FieldNo, 1)
-    ***---***
-    OMIT('***---***', _C60_)
-    FieldRef                      &= WHAT(pQueue, FieldNo)
-    ***---***
+    IsDataEmpty                    = TRUE
+    FieldQ.IsDataNumeric           = TRUE
+    FieldQ.IsDataUpper             = FALSE
     FieldQ.IsGroup                 = ISGROUP(pQueue, FieldNo)
-    FieldQ.IsNumeric               = TRUE
-    IsDataUpper                    = FALSE
     !ST::Debug('ST::DebugQueue/LoadFieldQ: RECORDS(pQueue)='& RECORDS(pQueue))
     IF RECORDS(pQueue) > 0 AND pNoTouch <> 1
-      DataLength                   = 0
+      FieldQ.DataLength            = 0
       LOOP RecNo = 1 TO RECORDS(pQueue)
         GET(pQueue, RecNo)
         !ST::Debug('ST::DebugQueue/LoadFieldQ: RecNo='& RecNo &'; FieldRef='& FieldRef)
         IF FieldRef <> ''
           IF NOT NUMERIC(FieldRef)
-            FieldQ.IsNumeric       = FALSE
+            FieldQ.IsDataNumeric   = FALSE
+          END
+          IF FieldRef <> ''
+            IsDataEmpty            = FALSE
           END
           SampleLength = LEN(CLIP(FieldRef))
-          IF NOT FieldQ.IsNumeric AND UPPER(FieldRef) = FieldRef
-            IsDataUpper            = TRUE
+          IF NOT FieldQ.IsDataNumeric AND UPPER(FieldRef) = FieldRef
+            FieldQ.IsDataUpper     = TRUE
           END
-          IF SampleLength > 25
-            DataLength             = 25
-          ELSIF DataLength < SampleLength
-            DataLength             = SampleLength
+          IF SampleLength > E_EnoughCharacters
+            SampleLength           = E_EnoughCharacters
+          END
+          IF SampleLength > FieldQ.DataLength
+            FieldQ.DataLength      = SampleLength
           END
         END
       END
+      IF IsDataEmpty
+        FieldQ.IsDataNumeric       = FALSE
+      END
     ELSE
-      IsDataUpper                  = TRUE
-      FieldQ.IsNumeric             = FALSE
-      DataLength                   = LEN(FieldRef)
+      FieldQ.IsDataNumeric         = FALSE
+      FieldQ.IsDataUpper           = TRUE
+      FieldQ.DataLength            = LEN(FieldRef)
     END
-    DO CalculateColumnWidth
     ADD(FieldQ)
   END  
+  !ST::DebugQueue(FieldQ, 'LoadFieldQ')
   !ST::Debug('ST::DebugQueue/LoadFieldQ/OUT')
 
-CalculateColumnWidth          ROUTINE
-  DATA
-HeaderWidth SHORT,AUTO
-DataWidth   SHORT,AUTO
+!======================================
+CalculateColumnWidths         PROCEDURE
+!--------------------------------------
+FieldNo                       LONG,AUTO
+HeaderWidth                   SHORT,AUTO
+DataWidth                     SHORT,AUTO
+!--------------------------------------
   CODE
-  HeaderWidth  = HeaderLength * WidthMultiplier:Narrow + UltVLB:HeaderOffset
-  DataWidth    = DataLength * CHOOSE(~IsDataUpper, WidthMultiplier:Narrow, WidthMultiplier:Wide) + UltVLB:DataOffset
-  FieldQ.Width = CHOOSE(DataWidth > HeaderWidth, DataWidth, HeaderWidth)
-  SELF.Debug(FieldQ.Header &' - '& HeaderLength &' - '& DataLength &' - '& HeaderWidth &' - '& DataWidth &' - '& FieldQ.Width)  
+  !ST::Debug('ST::DebugQueue/LoadFieldQ/IN: NumFields='& NumFields)
+  LOOP FieldNo = 1 TO NumFields
+    GET(FieldQ, FieldNo)
+    DataWidth    = FieldQ.DataLength   * CHOOSE(~FieldQ.IsDataUpper, WidthMultiplier:Narrow, WidthMultiplier:Wide) + 2*UltVLB:Offset:Data
+    HeaderWidth  = FieldQ.HeaderLength *                             WidthMultiplier:Narrow                        + 2*UltVLB:Offset:Header
+    FieldQ.Width = CHOOSE(DataWidth > HeaderWidth, DataWidth, HeaderWidth)
+    IF FieldQ.Width < 8 THEN FieldQ.Width = 8.
+    !SELF.Debug(FieldQ.Header &' - '& FieldQ.HeaderLength &' - '& FieldQ.DataLength &' - '& HeaderWidth &' - '& DataWidth &' - '& FieldQ.Width)  
+    PUT(FieldQ)
+  END  
+  !ST::DebugQueue(FieldQ, 'CalculateColumnWidths')
 
 !==============================================================================  
 UltimateDebug.Message         PROCEDURE(STRING pDebugString)  
@@ -802,14 +782,7 @@ UltimateDebug.Construct       PROCEDURE
 UltimateDebug.SetEventOffSet  PROCEDURE
     
   code
-  
-  COMPILE('**++** _C60_Plus_',_C60_)
   SELF.EventOffset = 0A000h
-  !  **++** _C60_Plus_
-  OMIT   ('**--** _PRE_C6_',_C60_)
-  SELF.EventOffset = 01400h
-  !  **--** _PRE_C6_
-
   IF UPPER(SELF.GetEventDescr(EVENT:ACCEPTED)) <> 'EVENT:ACCEPTED' 
     self.HuntForOffSet                                               
   end
