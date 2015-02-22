@@ -1,13 +1,22 @@
 !ABCIncludeFile
                
+UltVLB:Justify:Default        EQUATE('D')
+UltVLB:Justify:Left           EQUATE('L')
+UltVLB:Justify:Right          EQUATE('R')
+UltVLB:Justify:Center         EQUATE('C')
+                                      
+UltVLB:Offset:Data            EQUATE(2)
+UltVLB:Offset:Header          EQUATE(1)
+
+UltVLB:Width:String           EQUATE(100)
+UltVLB:Width:Number           EQUATE(40)
+
 !                              ITEMIZE(1)
 !UltVLB:QColor:NormalFG          EQUATE
 !UltVLB:QColor:NormalBG          EQUATE
 !UltVLB:QColor:SelectedFG        EQUATE
 !UltVLB:QColor:SelectedBG        EQUATE
 !                              END
-UltVLB:DataOffset             EQUATE(2)
-UltVLB:HeaderOffset           EQUATE(1)
 
 UltVLB:ColumnGroup            GROUP,TYPE
 FieldNo                         LONG        !Queue field number
@@ -22,8 +31,10 @@ Offset                          SHORT       !Column Justification Offset
 HJustification                  STRING(1)   !Header Justification: L/R/C/D
 HOffset                         SHORT       !Header Justification Offset
 IsFixed                         BOOL
+IsResizable                     BOOL
 HasColor                        BOOL
 HasIcon                         BOOL
+HasRightBorder                  BOOL
 HasStyle                        BOOL
 HasTree                         BOOL
                               END

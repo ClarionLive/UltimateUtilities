@@ -19,33 +19,36 @@ WinAPI:GetSysColor                PROCEDURE(SIGNED nIndex),LONG,PASCAL,NAME('Get
 !==============================================================================
 UltVLB:ColumnClass.Construct  PROCEDURE
   CODE
-  SELF.Width          = 100
-  SELF.Justification  = 'L'
-  SELF.Offset         = UltVLB:DataOffset
-  SELF.HJustification = 'L'
-  SELF.HOffset        = UltVLB:HeaderOffset
+  SELF.Width          = UltVLB:Width:String
+  SELF.Justification  = UltVLB:Justify:Left;  SELF.Offset  = UltVLB:Offset:Data
+  SELF.HJustification = UltVLB:Justify:Left;  SELF.HOffset = UltVLB:Offset:Header
+  SELF.IsResizable    = TRUE
+  SELF.HasRightBorder = TRUE
   
 !==============================================================================
 UltVLB:ColumnClass.FormatColumn   PROCEDURE(SIGNED ListFEQ,SHORT ColumnNo)
   CODE
-  ListFEQ{PROPLIST:Width  , ColumnNo} = SELF.Width
-  ListFEQ{PROPLIST:Header , ColumnNo} = SELF.Header
-  ListFEQ{PROPLIST:Picture, ColumnNo} = SELF.Picture
+  IF SELF.FieldNo
+    ListFEQ{PROPLIST:FieldNo, ColumnNo} = SELF.FieldNo
+  END
+  ListFEQ{PROPLIST:Width    , ColumnNo} = SELF.Width
+  ListFEQ{PROPLIST:Header   , ColumnNo} = SELF.Header
+  ListFEQ{PROPLIST:Picture  , ColumnNo} = SELF.Picture
   CASE SELF.Justification
-    ;OF 'D';  !No-op
-    ;OF 'L';  ListFEQ{PROPLIST:Left  , ColumnNo} = TRUE;  ListFEQ{PROPLIST:LeftOffset  , ColumnNo} = SELF.Offset
-    ;OF 'R';  ListFEQ{PROPLIST:Right , ColumnNo} = TRUE;  ListFEQ{PROPLIST:RightOffset , ColumnNo} = SELF.Offset
-    ;OF 'C';  ListFEQ{PROPLIST:Center, ColumnNo} = TRUE;  ListFEQ{PROPLIST:CenterOffset, ColumnNo} = SELF.Offset
+    ;OF UltVLB:Justify:Default;  !No-op
+    ;OF UltVLB:Justify:Left   ;  ListFEQ{PROPLIST:Left  , ColumnNo} = TRUE;  ListFEQ{PROPLIST:LeftOffset  , ColumnNo} = SELF.Offset
+    ;OF UltVLB:Justify:Right  ;  ListFEQ{PROPLIST:Right , ColumnNo} = TRUE;  ListFEQ{PROPLIST:RightOffset , ColumnNo} = SELF.Offset
+    ;OF UltVLB:Justify:Center ;  ListFEQ{PROPLIST:Center, ColumnNo} = TRUE;  ListFEQ{PROPLIST:CenterOffset, ColumnNo} = SELF.Offset
   END
   CASE SELF.HJustification
-    ;OF 'D';  !No-op
-    ;OF 'L';  ListFEQ{PROPLIST:HeaderLeft  , ColumnNo} = TRUE;  ListFEQ{PROPLIST:HeaderLeftOffset  , ColumnNo} = SELF.HOffset
-    ;OF 'R';  ListFEQ{PROPLIST:HeaderRight , ColumnNo} = TRUE;  ListFEQ{PROPLIST:HeaderRightOffset , ColumnNo} = SELF.HOffset
-    ;OF 'C';  ListFEQ{PROPLIST:HeaderCenter, ColumnNo} = TRUE;  ListFEQ{PROPLIST:HeaderCenterOffset, ColumnNo} = SELF.HOffset
+    ;OF UltVLB:Justify:Default;  !No-op
+    ;OF UltVLB:Justify:Left   ;  ListFEQ{PROPLIST:HeaderLeft  , ColumnNo} = TRUE;  ListFEQ{PROPLIST:HeaderLeftOffset  , ColumnNo} = SELF.HOffset
+    ;OF UltVLB:Justify:Right  ;  ListFEQ{PROPLIST:HeaderRight , ColumnNo} = TRUE;  ListFEQ{PROPLIST:HeaderRightOffset , ColumnNo} = SELF.HOffset
+    ;OF UltVLB:Justify:Center ;  ListFEQ{PROPLIST:HeaderCenter, ColumnNo} = TRUE;  ListFEQ{PROPLIST:HeaderCenterOffset, ColumnNo} = SELF.HOffset
   END
   ListFEQ{PROPLIST:Color      , ColumnNo} = SELF.HasColor
-  ListFEQ{PROPLIST:RightBorder, ColumnNo} = TRUE
-  ListFEQ{PROPLIST:Resize     , ColumnNo} = TRUE
+  ListFEQ{PROPLIST:RightBorder, ColumnNo} = SELF.HasRightBorder
+  ListFEQ{PROPLIST:Resize     , ColumnNo} = SELF.IsResizable
 
 !==============================================================================
 UltVLB:ColumnClass.GetElementCount       PROCEDURE!,SHORT
@@ -90,11 +93,9 @@ UltVLB:ColumnClass.IsElementNormalBG  PROCEDURE(BYTE Elem)!,BOOL
 !==============================================================================
 UltVLB:ColumnClassForNumber.Construct PROCEDURE
   CODE
-  SELF.Width          = 40
-  SELF.Justification  = 'R'
-  SELF.Offset         = UltVLB:DataOffset
-  SELF.HJustification = 'C'
-  SELF.HOffset        = 0
+  SELF.Width          = UltVLB:Width:Number
+  SELF.Justification  = UltVLB:Justify:Right ;  SELF.Offset  = UltVLB:Offset:Data
+  SELF.HJustification = UltVLB:Justify:Center;  SELF.HOffset = 0
 
 !==============================================================================
 !==============================================================================
@@ -294,10 +295,10 @@ VLB:RowParm:HasChanges          EQUATE(-3)
 
   CODE
   CASE Row
-    ;OF VLB:RowParm:RecordCount ;  ST::Debug('VLB:RecordCount'); RETURN SELF.Records()
-    ;OF VLB:RowParm:ElementCount;  ST::Debug('VLB:GetElems'   ); RETURN SELF.GetElementCount()
-    ;OF VLB:RowParm:HasChanges  ;  ST::Debug('VLB:HasChanged' ); RETURN SELF.HasDataChanged()
-    ;ELSE                       ;  ST::Debug('VLB:GetElem['& Row &':'& Elem &']'); RETURN SELF.GetElement(Row, Elem)
+    ;OF VLB:RowParm:RecordCount ;  ST::Debug('VLB:RecordCount='& SELF.Records()      ); RETURN SELF.Records()
+    ;OF VLB:RowParm:ElementCount;  ST::Debug('VLB:GetElems='& SELF.GetElementCount() ); RETURN SELF.GetElementCount()
+    ;OF VLB:RowParm:HasChanges  ;  ST::Debug('VLB:HasChanged='& SELF.HasDataChanged()); RETURN SELF.HasDataChanged()
+    ;ELSE                       ;  ST::Debug('VLB:GetElem['& Row &':'& Elem &']='& SELF.GetElement(Row, Elem)); RETURN SELF.GetElement(Row, Elem)
   END
 
 !==============================================================================
